@@ -1,0 +1,75 @@
+#!/usr/bin/env python
+import requests
+import argparse
+import sys
+import webbrowser
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+OMDB_KEY = os.environ.get("OMDB_KEY")
+
+
+def main() -> int:
+    if not OMDB_KEY:
+        print(
+            ":: OMDB_KEY not found. "
+            "Please set the OMDB_KEY environment variable "
+            "to your OMDB api key.",
+            file=sys.stderr,
+        )
+        sys.exit(1)
+    parser = argparse.ArgumentParser(
+        description="Get information about a movie."
+    )
+    parser.add_argument("name", help="Name of the movie.")
+    parser.add_argument(
+        "-k",
+        "--keys",
+        nargs="+",
+        default=[],
+        help="Highlight rows with the following keys.",
+    )
+    parser.add_argument(
+        "-o",
+        "--open",
+        action="store_true",
+        help="Open IMDB link in the browser.",
+    )
+    args = parser.parse_args()
+    if args.keys:
+        args.keys = [key.lower() for key in args.keys]
+
+    movie_name = args.name
+    movie_name = "+".join(movie_name.split())
+    response = requests.get(
+        f"http://omdbapi.com/?apikey={OMDB_KEY}&t={movie_name}"
+    )
+    try:
+        response.raise_for_status()
+    except requests.exceptions.HTTPError:
+        print(f":: Invalid API key: {OMDB_KEY}", file=sys.stderr)
+        sys.exit(2)
+
+    imdb_id = None
+    for key, val in response.json().items():
+        if key == "imdbID":
+            imdb_id = val
+        if key == "Ratings":
+            val = ", ".join([f"{r['Source']}: {r['Value']}" for r in val])
+        if key.lower() in args.keys:
+            print(f"\033[45;1m{key:<12}: {val}\033[0m")
+        else:
+            print(f"\033[1m{key:<12}: \033[35m{val}\033[0m")
+
+    if args.open:
+        if imdb_id:
+            print(f"\n:: Opening IMDB page in default browser.")
+            webbrowser.open(f"https://www.imdb.com/title/{imdb_id}")
+        else:
+            print(f"\n:: IMDB Link not available.", file=sys.stderr)
+    return 0
+
+
+if __name__ == "__main__":
+    exit(main())
