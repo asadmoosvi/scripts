@@ -88,8 +88,9 @@ def main(movie: str, tv: str, limit: int, imdb_open: bool) -> None:
             "OMDB_KEY env variable not found."
             " Please set it to fetch IMDB info."
         )
-        for result in results:
-            click.echo(f"{result['Type']:<10}{result['Name']}")
+        click.echo("\nBasic Results:\n")
+        for idx, result in enumerate(results):
+            click.echo(f"{idx+1:<2})    {result['Type']:<10}{result['Name']}")
     else:
         endpoint_url = (
             "http://www.omdbapi.com/?"
