@@ -58,6 +58,7 @@ def fetch_results(query: str, _type: str, limit: int) -> List[Dict]:
     show_default=True,
     help="Number of results to show.",
 )
+@click.help_option("-h", "--help")
 def main(movie: str, tv: str, limit: int) -> None:
     if movie is not None:
         query = movie
