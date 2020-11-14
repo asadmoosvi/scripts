@@ -1,0 +1,100 @@
+#!/usr/bin/env python
+
+import os
+import sys
+import click
+import requests
+from dotenv import load_dotenv
+from typing import List, Dict
+
+
+load_dotenv()
+TASTEDIVE_KEY = os.getenv("TASTEDIVE_KEY")
+OMDB_KEY = os.getenv("OMDB_KEY")
+
+
+def die(msg: str) -> None:
+    click.echo(f"ERROR: {msg}", err=True)
+    sys.exit(1)
+
+
+def info(msg: str) -> None:
+    click.echo(f"===> {msg}", err=True)
+
+
+def fetch_results(query: str, _type: str, limit: int) -> List[Dict]:
+    if TASTEDIVE_KEY is None:
+        die("TASTEDIVE_KEY env variable not found.")
+    else:
+        info(f"Searching for similar {_type} to {query!r} ...")
+        info(f"Limit: {limit}")
+        click.echo()
+
+    query = "+".join(query.split())
+    endpoint_url = (
+        "https://tastedive.com/api/similar?"
+        "q={query}"
+        "&type={_type}"
+        "&limit={limit}"
+        "&k={TASTEDIVE_KEY}"
+    )
+
+    response = requests.get(
+        endpoint_url.format(
+            query=query, _type=_type, limit=limit, TASTEDIVE_KEY=TASTEDIVE_KEY
+        )
+    )
+    response.raise_for_status()
+    return response.json()["Similar"]["Results"]
+
+
+@click.command(help="Find similar movies/shows using the Tastedive API.")
+@click.option("-m", "--movie", help="Movie query.")
+@click.option("-t", "--tv", help="TV show query.")
+@click.option("-l", "--limit", default=20, help="Number of results to show.")
+def main(movie: str, tv: str, limit: int) -> None:
+    if movie is not None:
+        query = movie
+        _type = "movies"
+    elif tv is not None:
+        query = tv
+        _type = "shows"
+    else:
+        die("No input received. Search for movies with -m or shows with -t")
+
+    results = fetch_results(query, _type, limit)
+
+    if OMDB_KEY is None:
+        info(
+            "OMDB_KEY env variable not found."
+            " Please set it to fetch IMDB info."
+        )
+        for result in results:
+            click.echo(f"{result['Type']:<10}{result['Name']}")
+    else:
+        endpoint_url = "http://www.omdbapi.com/?apikey={OMDB_KEY}&t={title}"
+        for idx, result in enumerate(results):
+            title = "+".join(result["Name"].split())
+            response = requests.get(
+                endpoint_url.format(
+                    OMDB_KEY=OMDB_KEY,
+                    title=title,
+                )
+            )
+            response.raise_for_status()
+            json_response = response.json()
+            click.echo(f"[{idx+1}]")
+            click.echo(
+                f"    Title :  {json_response['Title']}\n"
+                f"    Year  :  {json_response['Year']}\n"
+                f"    Rated :  {json_response['Rated']}\n"
+                f"    Genre :  {json_response['Genre']}\n"
+                f"    Rating:  {json_response['imdbRating']}\n"
+                f"    Votes :  {json_response['imdbVotes']}\n"
+                f"    Link  :  https://imdb.com/title/{json_response['imdbID']}\n"
+            )
+            click.echo()
+
+
+if __name__ == "__main__":
+    main()
