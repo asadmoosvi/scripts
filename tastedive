@@ -51,7 +51,13 @@ def fetch_results(query: str, _type: str, limit: int) -> List[Dict]:
 @click.command(help="Find similar movies/shows using the Tastedive API.")
 @click.option("-m", "--movie", help="Movie query.")
 @click.option("-t", "--tv", help="TV show query.")
-@click.option("-l", "--limit", default=20, help="Number of results to show.")
+@click.option(
+    "-l",
+    "--limit",
+    default=20,
+    show_default=True,
+    help="Number of results to show.",
+)
 def main(movie: str, tv: str, limit: int) -> None:
     if movie is not None:
         query = movie
