@@ -82,15 +82,25 @@ def main(movie: str, tv: str, limit: int) -> None:
         for result in results:
             click.echo(f"{result['Type']:<10}{result['Name']}")
     else:
-        endpoint_url = "http://www.omdbapi.com/?apikey={OMDB_KEY}&t={title}"
+        endpoint_url = (
+            "http://www.omdbapi.com/?"
+            "apikey={OMDB_KEY}"
+            "&t={title}"
+            "&type={imdb_type}"
+        )
+        if _type == "movies":
+            imdb_type = "movie"
+        elif _type == "shows":
+            imdb_type = "series"
+
         for idx, result in enumerate(results):
             title = "+".join(result["Name"].split())
-            response = requests.get(
-                endpoint_url.format(
-                    OMDB_KEY=OMDB_KEY,
-                    title=title,
-                )
+            omdb_url = endpoint_url.format(
+                OMDB_KEY=OMDB_KEY,
+                title=title,
+                imdb_type=imdb_type,
             )
+            response = requests.get(omdb_url)
             response.raise_for_status()
             json_response = response.json()
             click.echo(f"[{idx+1}]")
