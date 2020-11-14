@@ -54,7 +54,7 @@ def fetch_results(query: str, _type: str, limit: int) -> List[Dict]:
 @click.option(
     "-l",
     "--limit",
-    default=20,
+    default=10,
     show_default=True,
     help="Number of results to show.",
 )
