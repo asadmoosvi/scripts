@@ -104,15 +104,18 @@ def main(movie: str, tv: str, limit: int) -> None:
             response.raise_for_status()
             json_response = response.json()
             click.echo(f"[{idx+1}]")
-            click.echo(
-                f"    Title :  {json_response['Title']}\n"
-                f"    Year  :  {json_response['Year']}\n"
-                f"    Rated :  {json_response['Rated']}\n"
-                f"    Genre :  {json_response['Genre']}\n"
-                f"    Rating:  {json_response['imdbRating']}\n"
-                f"    Votes :  {json_response['imdbVotes']}\n"
-                f"    Link  :  https://imdb.com/title/{json_response['imdbID']}\n"
-            )
+            try:
+                click.echo(
+                    f"    Title :  {json_response['Title']}\n"
+                    f"    Year  :  {json_response['Year']}\n"
+                    f"    Rated :  {json_response['Rated']}\n"
+                    f"    Genre :  {json_response['Genre']}\n"
+                    f"    Rating:  {json_response['imdbRating']}\n"
+                    f"    Votes :  {json_response['imdbVotes']}\n"
+                    f"    Link  :  https://imdb.com/title/{json_response['imdbID']}\n"
+                )
+            except KeyError:
+                click.echo("    [Unknown]")
             click.echo()
 
 
