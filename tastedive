@@ -66,7 +66,11 @@ def main(movie: str, tv: str, limit: int) -> None:
         query = tv
         _type = "shows"
     else:
-        die("No input received. Search for movies with -m or shows with -t")
+        die(
+            "No input received.\n"
+            "Search for movies with `-m` or shows with `-t`.\n"
+            "Run `--help` for more info."
+        )
 
     results = fetch_results(query, _type, limit)
 
