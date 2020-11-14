@@ -4,6 +4,7 @@ import os
 import sys
 import click
 import requests
+import webbrowser
 from dotenv import load_dotenv
 from typing import List, Dict
 
@@ -58,8 +59,15 @@ def fetch_results(query: str, _type: str, limit: int) -> List[Dict]:
     show_default=True,
     help="Number of results to show.",
 )
+@click.option(
+    "-o",
+    "--open",
+    "imdb_open",
+    is_flag=True,
+    help="Open IMDb links in browser.",
+)
 @click.help_option("-h", "--help")
-def main(movie: str, tv: str, limit: int) -> None:
+def main(movie: str, tv: str, limit: int, imdb_open: bool) -> None:
     if movie is not None:
         query = movie
         _type = "movies"
@@ -106,6 +114,7 @@ def main(movie: str, tv: str, limit: int) -> None:
             json_response = response.json()
             click.echo(f"[{idx+1}]")
             try:
+                imdb_link = f"https://imdb.com/title/{json_response['imdbID']}"
                 click.echo(
                     f"    Title :  {json_response['Title']}\n"
                     f"    Year  :  {json_response['Year']}\n"
@@ -113,8 +122,12 @@ def main(movie: str, tv: str, limit: int) -> None:
                     f"    Genre :  {json_response['Genre']}\n"
                     f"    Rating:  {json_response['imdbRating']}\n"
                     f"    Votes :  {json_response['imdbVotes']}\n"
-                    f"    Link  :  https://imdb.com/title/{json_response['imdbID']}\n"
+                    f"    Link  :  {imdb_link}"
                 )
+                if imdb_open:
+                    click.echo()
+                    info(f"Opening IMDb link for `{json_response['Title']}`")
+                    webbrowser.open(imdb_link)
             except KeyError:
                 click.echo("    [Unknown]")
             click.echo()
