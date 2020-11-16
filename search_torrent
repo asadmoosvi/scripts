@@ -7,9 +7,10 @@ from bs4 import BeautifulSoup
 
 @click.command()
 @click.argument("search")
-def main(search) -> None:
+@click.option("-P", "--no-pager", is_flag=True, help="Do not use a pager.")
+def main(search, no_pager) -> None:
     """Search for a torrent."""
-    click.echo(f"Searching for {search!r} ...")
+    click.echo(f"Searching for {search!r} ...", err=True)
     torrent_url = "https://thepiratebay0.org/search/{search}/1/99/0"
     search = "%20".join(search.split())
     endpoint = torrent_url.format(search=search)
@@ -62,7 +63,10 @@ def main(search) -> None:
 
     sep = "\n\n" + "=" * click.get_terminal_size()[0] + "\n\n"
     if string_results:
-        click.echo_via_pager(sep.join(string_results))
+        if no_pager:
+            click.echo(sep.join(string_results))
+        else:
+            click.echo_via_pager(sep.join(string_results))
     else:
         click.echo("No results found.")
 
