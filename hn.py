@@ -5,6 +5,7 @@ from typing import Optional, Sequence
 from bs4 import BeautifulSoup
 import requests
 import logging
+import sys
 
 logging.basicConfig(format="[%(asctime)s] - %(message)s", level=logging.INFO)
 
@@ -25,6 +26,7 @@ class HNRecord:
 
 def main(argv: Optional[Sequence[str]] = None) -> int:
     hackernews_url = "https://news.ycombinator.com/news"
+    print("Fetching top hackernews links...", file=sys.stderr)
     response = requests.get(hackernews_url)
     if response.status_code != requests.codes.ok:
         logging.error("hackernews website could not be loaded")
