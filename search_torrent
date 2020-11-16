@@ -1,0 +1,71 @@
+#!/usr/bin/env python3
+
+import click
+import requests
+from bs4 import BeautifulSoup
+
+
+@click.command()
+@click.argument("search")
+def main(search) -> None:
+    """Search for a torrent."""
+    click.echo(f"Searching for {search!r} ...")
+    torrent_url = "https://thepiratebay0.org/search/{search}/1/99/0"
+    search = "%20".join(search.split())
+    endpoint = torrent_url.format(search=search)
+    response = requests.get(endpoint)
+    response.raise_for_status()
+    soup = BeautifulSoup(response.text, "lxml")
+    results = soup.select("#searchResult tr:not(:first-child)")
+    string_results = list()
+    for result in results:
+        category = result.select(".vertTh > center > a")
+        if category:
+            category = ", ".join(c.text for c in category)
+        else:
+            category = "Unknown"
+
+        name = result.select(".detName")
+        if name:
+            name = name[0].text.strip()
+        else:
+            name = "Unknown"
+
+        magnet_link = result.select("td > a")
+        if magnet_link:
+            magnet_link = magnet_link[0]["href"]
+        else:
+            magnet_link = "Unknown"
+
+        seeders_leechers = result.select("td[align='right']")
+        if seeders_leechers:
+            seeders = seeders_leechers[0].text
+            leechers = seeders_leechers[1].text
+        else:
+            seeders_leechers = "Unknown"
+
+        if (
+            category == "Unknown"
+            or name == "Unknown"
+            or magnet_link == "Unknown"
+            or seeders_leechers == "Unknown"
+        ):
+            continue
+
+        string_results.append(
+            f"Name        : {name}\n"
+            f"Category    : {category}\n"
+            f"Seeders     : {seeders}\n"
+            f"Leechers    : {leechers}\n"
+            f"\n{magnet_link}"
+        )
+
+    sep = "\n\n" + "=" * click.get_terminal_size()[0] + "\n\n"
+    if string_results:
+        click.echo_via_pager(sep.join(string_results))
+    else:
+        click.echo("No results found.")
+
+
+if __name__ == "__main__":
+    main()
