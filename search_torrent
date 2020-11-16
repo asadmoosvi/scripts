@@ -8,6 +8,7 @@ from bs4 import BeautifulSoup
 @click.command()
 @click.argument("search")
 @click.option("-P", "--no-pager", is_flag=True, help="Do not use a pager.")
+@click.help_option("-h", "--help")
 def main(search, no_pager) -> None:
     """Search for a torrent."""
     click.echo(f"Searching for {search!r} ...", err=True)
