@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 from typing import Optional, Sequence
+from typing import NamedTuple
 from bs4 import BeautifulSoup
 import requests
 import logging
@@ -9,11 +10,10 @@ import sys
 logging.basicConfig(format="[%(asctime)s] - %(message)s", level=logging.INFO)
 
 
-class HNRecord:
-    def __init__(self, title: str, link: str, upvotes: int) -> None:
-        self.title = title
-        self.link = link
-        self.upvotes = upvotes
+class HNRecord(NamedTuple):
+    title: str
+    link: str
+    upvotes: int
 
     def __str__(self):
         return (
