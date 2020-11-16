@@ -6,6 +6,7 @@
     - need a valid TASTEDIVE key (set it in the `TASTEDIVE_KEY` env var)
     - imdb based search results will be shown if OMDB key is also present
 - search_torrent (search for torrents on piratebay)
+- hn.py (fetch the top hackernews links of the day)
 
 ## where to get the keys?
 
