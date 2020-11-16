@@ -1,0 +1,76 @@
+#!/usr/bin/env python3
+
+from os import get_terminal_size
+from typing import Optional, Sequence
+from bs4 import BeautifulSoup
+import requests
+import logging
+
+logging.basicConfig(format="[%(asctime)s] - %(message)s", level=logging.INFO)
+
+
+class HNRecord:
+    def __init__(self, title: str, link: str, upvotes: int) -> None:
+        self.title = title
+        self.link = link
+        self.upvotes = upvotes
+
+    def __str__(self):
+        return (
+            f"Title: {self.title}\n"
+            f"Link: {self.link}\n"
+            f"Upvotes: {self.upvotes}\n"
+        )
+
+
+def main(argv: Optional[Sequence[str]] = None) -> int:
+    hackernews_url = "https://news.ycombinator.com/news"
+    response = requests.get(hackernews_url)
+    if response.status_code != requests.codes.ok:
+        logging.error("hackernews website could not be loaded")
+        return 1
+
+    soup = BeautifulSoup(response.text, "html.parser")
+    score_elems = soup.select(".score")
+    records = list()
+    athing_elems = soup.select(".athing")
+
+    for elem in athing_elems:
+        link_elem = elem.select_one(".storylink")
+        if not link_elem.get("href").startswith("http"):
+            continue
+        for score_elem in score_elems:
+            if score_elem.get("id") == "score_" + elem.get("id"):
+                record = HNRecord(
+                    link_elem.text,
+                    link_elem.get("href"),
+                    int(score_elem.text.split()[0]),
+                )
+                records.append(record)
+
+    records = sorted(records, key=lambda x: x.upvotes, reverse=True)
+
+    upvotes_width = 10
+    title_width = 80
+    link_width = 80
+    heading_width = link_width + title_width + upvotes_width
+
+    print("[Hackernews Links]".center(heading_width) + "\n")
+    print(
+        "Upvotes".ljust(upvotes_width)
+        + "Title".ljust(title_width)
+        + "Link".ljust(link_width)
+    )
+    print("-" * (get_terminal_size().columns))
+    for record in records:
+        print(
+            str(record.upvotes).ljust(upvotes_width)
+            + record.title.ljust(title_width)
+            + record.link.ljust(link_width)
+        )
+
+    return 0
+
+
+if __name__ == "__main__":
+    exit(main())
