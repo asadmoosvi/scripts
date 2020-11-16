@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 
-from os import get_terminal_size
 from typing import Optional, Sequence
 from bs4 import BeautifulSoup
 import requests
@@ -59,11 +58,11 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
 
     print("[Hackernews Links]".center(heading_width) + "\n")
     print(
-        "Upvotes".ljust(upvotes_width)
-        + "Title".ljust(title_width)
-        + "Link".ljust(link_width)
+        "[Upvotes]".ljust(upvotes_width)
+        + "[Title]".ljust(title_width)
+        + "[Link]".ljust(link_width)
     )
-    print("-" * (get_terminal_size().columns))
+    print()
     for record in records:
         print(
             str(record.upvotes).ljust(upvotes_width)
