@@ -24,34 +24,21 @@ def main(search, no_pager) -> None:
         category = result.select(".vertTh > center > a")
         if category:
             category = ", ".join(c.text for c in category)
-        else:
-            category = "Unknown"
 
         name = result.select(".detName")
         if name:
             name = name[0].text.strip()
-        else:
-            name = "Unknown"
 
         magnet_link = result.select("td > a")
         if magnet_link:
             magnet_link = magnet_link[0]["href"]
-        else:
-            magnet_link = "Unknown"
 
         seeders_leechers = result.select("td[align='right']")
         if seeders_leechers:
             seeders = seeders_leechers[0].text
             leechers = seeders_leechers[1].text
-        else:
-            seeders_leechers = "Unknown"
 
-        if (
-            category == "Unknown"
-            or name == "Unknown"
-            or magnet_link == "Unknown"
-            or seeders_leechers == "Unknown"
-        ):
+        if not (category and name and magnet_link and seeders_leechers):
             continue
 
         string_results.append(
