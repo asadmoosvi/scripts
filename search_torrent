@@ -38,7 +38,7 @@ def main(search, no_pager) -> None:
             seeders = seeders_leechers[0].text
             leechers = seeders_leechers[1].text
 
-        if not (category and name and magnet_link and seeders_leechers):
+        if not all([category, name, magnet_link, seeders_leechers]):
             continue
 
         string_results.append(
