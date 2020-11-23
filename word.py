@@ -18,27 +18,27 @@ def main(word):
     result = response.json()[0]
     pronunciation = result["phonetics"][0]["audio"]
     meanings = result["meanings"]
-    print(f"word: {word}")
-    print(f"pronunciation: {pronunciation}")
-    print("=" * 80)
+    click.echo(f"word: {word}")
+    click.echo(f"pronunciation: {pronunciation}")
+    click.echo("=" * 80)
 
     for meaning in meanings:
         part_of_speech = meaning["partOfSpeech"]
         definitions = meaning["definitions"]
 
-        print(f"{part_of_speech}s:")
+        click.echo(f"{part_of_speech}s:")
         for definition in definitions:
             for k, v in definition.items():
                 if k == "synonyms":
                     v = ", ".join(v)
                 if k == "definition":
-                    print("- ", end="")
+                    click.echo("- ", nl=False)
                 else:
-                    print("  ", end="")
-                print(f"{k}: {v}")
-            print()
+                    click.echo("  ", nl=False)
+                click.echo(f"{k}: {v}")
+            click.echo()
 
-        print("-" * 80)
+        click.echo("-" * 80)
 
 
 if __name__ == "__main__":
