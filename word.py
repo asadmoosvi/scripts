@@ -3,6 +3,7 @@
 import requests
 import click
 import subprocess
+import os
 
 
 @click.command()
@@ -10,7 +11,8 @@ import subprocess
 @click.option(
     "-p", "--play", is_flag=True, help="play pronunciation using mpv"
 )
-def main(word, play):
+@click.option("-s", "--save", is_flag=True, help="save pronunciation to file")
+def main(word, play, save):
     """
     Lookup meaning of WORD.
     """
@@ -47,6 +49,16 @@ def main(word, play):
     if play:
         click.echo("\n:: playing pronunciation...\n")
         subprocess.run(["mpv", pronunciation])
+
+    if save:
+        filename = os.path.basename(pronunciation)
+        click.echo(f"\n:: saving pronunciation to external file {filename!r}")
+        with open(filename, "wb") as fout:
+            pronunciation_data = requests.get(pronunciation)
+            pronunciation_data.raise_for_status()
+            for chunk in pronunciation_data.iter_content(1024):
+                if chunk:
+                    fout.write(chunk)
 
 
 if __name__ == "__main__":
