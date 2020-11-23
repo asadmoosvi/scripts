@@ -2,11 +2,15 @@
 
 import requests
 import click
+import subprocess
 
 
 @click.command()
 @click.argument("word")
-def main(word):
+@click.option(
+    "-p", "--play", is_flag=True, help="play pronunciation using mpv"
+)
+def main(word, play):
     """
     Lookup meaning of WORD.
     """
@@ -39,6 +43,10 @@ def main(word):
             click.echo()
 
         click.echo("-" * 80)
+
+    if play:
+        click.echo("\n:: playing pronunciation...\n")
+        subprocess.run(["mpv", pronunciation])
 
 
 if __name__ == "__main__":
