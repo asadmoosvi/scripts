@@ -4,6 +4,7 @@ import requests
 import click
 import subprocess
 import os
+import sys
 
 
 @click.command()
@@ -19,7 +20,11 @@ def main(word, play, save):
 
     endpoint = f"https://api.dictionaryapi.dev/api/v2/entries/en/{word}"
     response = requests.get(endpoint)
-    response.raise_for_status()
+    try:
+        response.raise_for_status()
+    except requests.exceptions.HTTPError:
+        click.echo(f":: word {word!r} not found", err=True)
+        sys.exit(1)
 
     result = response.json()[0]
     pronunciation = result["phonetics"][0]["audio"]
