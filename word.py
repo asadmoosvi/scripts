@@ -13,6 +13,7 @@ import sys
     "-p", "--play", is_flag=True, help="play pronunciation using mpv"
 )
 @click.option("-s", "--save", is_flag=True, help="save pronunciation to file")
+@click.help_option("-h", "--help")
 def main(word, play, save):
     """
     Lookup meaning of WORD.
