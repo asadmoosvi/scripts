@@ -33,7 +33,7 @@ def main(word, play, save):
     click.secho(f"{word}", fg="bright_green")
     click.secho("pronunciation: ", fg="cyan", bold=True, nl=False)
     click.secho(f"{pronunciation}", fg="bright_green")
-    click.secho("=" * 80, fg="magenta")
+    click.secho("=" * click.get_terminal_size()[0], fg="magenta")
 
     for meaning in meanings:
         part_of_speech = meaning["partOfSpeech"]
@@ -52,7 +52,7 @@ def main(word, play, save):
                 click.secho(f"{v}", fg="bright_green")
             click.echo()
 
-        click.secho("-" * 80, fg="magenta")
+        click.secho("-" * click.get_terminal_size()[0], fg="magenta")
 
     if play:
         click.echo("\n:: playing pronunciation...\n")
