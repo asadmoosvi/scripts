@@ -29,15 +29,17 @@ def main(word, play, save):
     result = response.json()[0]
     pronunciation = result["phonetics"][0]["audio"]
     meanings = result["meanings"]
-    click.echo(f"word: {word}")
-    click.echo(f"pronunciation: {pronunciation}")
-    click.echo("=" * 80)
+    click.secho("word: ", fg="cyan", bold=True, nl=False)
+    click.secho(f"{word}", fg="bright_green")
+    click.secho("pronunciation: ", fg="cyan", bold=True, nl=False)
+    click.secho(f"{pronunciation}", fg="bright_green")
+    click.secho("=" * 80, fg="magenta")
 
     for meaning in meanings:
         part_of_speech = meaning["partOfSpeech"]
         definitions = meaning["definitions"]
 
-        click.echo(f"{part_of_speech}s:")
+        click.secho(f"{part_of_speech}s:", fg="cyan", bold=True)
         for definition in definitions:
             for k, v in definition.items():
                 if k == "synonyms":
@@ -46,10 +48,11 @@ def main(word, play, save):
                     click.echo("- ", nl=False)
                 else:
                     click.echo("  ", nl=False)
-                click.echo(f"{k}: {v}")
+                click.secho(f"{k}: ", bold=True, nl=False)
+                click.secho(f"{v}", fg="bright_green")
             click.echo()
 
-        click.echo("-" * 80)
+        click.secho("-" * 80, fg="magenta")
 
     if play:
         click.echo("\n:: playing pronunciation...\n")
