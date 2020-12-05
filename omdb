@@ -58,9 +58,15 @@ def main() -> int:
         if key == "Ratings":
             val = ", ".join([f"{r['Source']}: {r['Value']}" for r in val])
         if key.lower() in args.keys:
-            print(f"\033[45;1m{key:<12}: {val}\033[0m")
+            if sys.stdout.isatty():
+                print(f"\033[45;1m{key:<12}: {val}\033[0m")
+            else:
+                print(f"{key:<12}: {val}")
         else:
-            print(f"\033[1m{key:<12}: \033[35m{val}\033[0m")
+            if sys.stdout.isatty():
+                print(f"\033[1m{key:<12}: \033[35m{val}\033[0m")
+            else:
+                print(f"{key:<12}: {val}")
 
     if args.open:
         if imdb_id:
