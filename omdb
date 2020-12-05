@@ -64,10 +64,10 @@ def main() -> int:
 
     if args.open:
         if imdb_id:
-            print(f"\n:: Opening IMDB page in default browser.")
+            print("\n:: Opening IMDB page in default browser.")
             webbrowser.open(f"https://www.imdb.com/title/{imdb_id}")
         else:
-            print(f"\n:: IMDB Link not available.", file=sys.stderr)
+            print("\n:: IMDB Link not available.", file=sys.stderr)
     return 0
 
 
