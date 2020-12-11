@@ -18,7 +18,7 @@ def main() -> int:
             "to your OMDB api key.",
             file=sys.stderr,
         )
-        sys.exit(1)
+        return 1
     parser = argparse.ArgumentParser(
         description="Get information about a movie/tv-show."
     )
@@ -60,7 +60,7 @@ def main() -> int:
         response.raise_for_status()
     except requests.exceptions.HTTPError:
         print(f":: Invalid API key: {OMDB_KEY}", file=sys.stderr)
-        sys.exit(2)
+        return 2
 
     imdb_id = None
     for key, val in response.json().items():
