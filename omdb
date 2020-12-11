@@ -20,9 +20,9 @@ def main() -> int:
         )
         sys.exit(1)
     parser = argparse.ArgumentParser(
-        description="Get information about a movie."
+        description="Get information about a movie/tv-show."
     )
-    parser.add_argument("name", help="Name of the movie.")
+    parser.add_argument("name", help="Name of the movie/tv-show.")
     parser.add_argument(
         "-k",
         "--keys",
@@ -36,15 +36,26 @@ def main() -> int:
         action="store_true",
         help="Open IMDB link in the browser.",
     )
+    parser.add_argument(
+        "-t",
+        "--type",
+        dest="type_",
+        choices=("tv", "movie"),
+        help="Type of result to fetch.",
+    )
     args = parser.parse_args()
     if args.keys:
         args.keys = [key.lower() for key in args.keys]
 
     movie_name = args.name
     movie_name = "+".join(movie_name.split())
-    response = requests.get(
-        f"http://omdbapi.com/?apikey={OMDB_KEY}&t={movie_name}"
-    )
+    endpoint = f"http://omdbapi.com/?apikey={OMDB_KEY}&t={movie_name}"
+    if args.type_:
+        if args.type_ == "tv":
+            args.type_ = "series"
+        endpoint += f"&type={args.type_}"
+
+    response = requests.get(endpoint)
     try:
         response.raise_for_status()
     except requests.exceptions.HTTPError:
