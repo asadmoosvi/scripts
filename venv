@@ -1,0 +1,31 @@
+#!/usr/bin/bash
+
+venv_name='venv'
+
+
+if [ -n "$1" ]; then
+    if [ "$1" == "-h" ] || [ "$1" == "--help" ]; then
+        echo "Usage: $(basename $0) [NAME (default: venv)]"
+        exit 1
+    fi
+    venv_name="$1"
+fi
+
+
+if ! command -v virtualenv &> /dev/null
+then
+    echo "warning: command virtualenv does not exist"
+    echo "installing it..."
+    python3 -m pip install virtualenv
+    echo
+fi
+
+
+virtualenv "$venv_name"
+echo
+
+source ./"$venv_name"/bin/activate
+pip install flake8 mypy jedi black
+echo
+
+echo "virtualenv '$venv_name' created"
