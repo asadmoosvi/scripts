@@ -2,6 +2,7 @@
 
 import click
 import requests
+import subprocess
 from bs4 import BeautifulSoup
 
 
@@ -41,12 +42,18 @@ def main(search, no_pager) -> None:
         if not all([category, name, magnet_link, seeders_leechers]):
             continue
 
+        text = "download torrent"
+        target = magnet_link
+        hyperlink = (
+            f"\u001b[1m\u001b]8;;{target}\u001b\\{text}"
+            f"\u001b]8;;\u001b\\\u001b[0m"
+        )
         string_results.append(
             f"Name        : {name}\n"
             f"Category    : {category}\n"
             f"Seeders     : {seeders}\n"
             f"Leechers    : {leechers}\n"
-            f"\n{magnet_link}"
+            f"===> {hyperlink}"
         )
 
     sep = "\n\n" + "=" * click.get_terminal_size()[0] + "\n\n"
@@ -54,7 +61,14 @@ def main(search, no_pager) -> None:
         if no_pager:
             click.echo(sep.join(string_results))
         else:
-            click.echo_via_pager(sep.join(string_results))
+            process = subprocess.Popen(["less", "-r"], stdin=subprocess.PIPE)
+            try:
+                if process.stdin is not None:
+                    process.stdin.write(sep.join(string_results).encode())
+                    process.communicate()
+            except Exception as exc:
+                print(f"[ERROR] exception occurred: {repr(exc)}")
+
     else:
         click.echo("No results found.")
 
