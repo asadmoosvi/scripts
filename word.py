@@ -1,10 +1,12 @@
 #!/usr/bin/env python3
 
-import requests
-import click
-import subprocess
 import os
+import subprocess
 import sys
+from shutil import which
+
+import click
+import requests
 
 
 @click.command()
@@ -24,7 +26,9 @@ def main(word, play, save):
     try:
         response.raise_for_status()
     except requests.exceptions.HTTPError:
-        click.echo(f":: word {word!r} not found", err=True)
+        click.secho(
+            f":: word {word!r} not found", fg="bright_yellow", err=True
+        )
         sys.exit(1)
 
     result = response.json()[0]
@@ -56,8 +60,16 @@ def main(word, play, save):
         click.secho("-" * click.get_terminal_size()[0], fg="magenta")
 
     if play:
-        click.echo("\n:: playing pronunciation...\n")
-        subprocess.run(["mpv", pronunciation])
+        if not which("mpv"):
+            click.secho(
+                "\n:: [ERROR] mpv is not installed. "
+                "please install it to play the pronunciation.",
+                fg="bright_red",
+                err=True,
+            )
+        else:
+            click.echo("\n:: playing pronunciation...\n")
+            subprocess.run(["mpv", pronunciation])
 
     if save:
         filename = os.path.basename(pronunciation)
