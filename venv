@@ -25,7 +25,7 @@ virtualenv "$venv_name"
 echo
 
 source ./"$venv_name"/bin/activate
-pip install flake8 mypy jedi black
+pip install flake8 mypy jedi black isort
 echo
 
 echo "virtualenv '$venv_name' created"
