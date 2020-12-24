@@ -1,0 +1,48 @@
+#!/usr/bin/env python3
+import logging
+import subprocess
+from pathlib import Path
+
+import click
+import requests
+
+logging.basicConfig(level=logging.INFO, format='[%(levelname)s] %(message)s')
+
+
+@click.command()
+@click.argument('user')
+@click.option(
+    '-d',
+    '--dest',
+    default=str(Path.cwd()),
+    show_default=True,
+    help="Destination directory where the user's repositories will be stored.",
+)
+@click.help_option('-h', '--help')
+@click.pass_context
+def main(ctx: click.Context, user: str, dest: str) -> None:
+    """Clone github repositories of USER into a destination directory."""
+    response = requests.get(f'https://api.github.com/users/{user}/repos')
+    if response.status_code != requests.codes.ok:
+        logging.error(f'user {user!r} not found')
+        ctx.exit(1)
+
+    repos_dir = Path(dest) / user
+    repos_dir.mkdir(exist_ok=True, parents=True)
+    logging.info(f'cloning repositories of user {user!r} into {repos_dir}\n')
+
+    for repo in response.json():
+        repo_name, repo_url = repo['name'], repo['html_url']
+        proc = subprocess.run(
+            ['git', 'clone', repo_url, repos_dir / repo_name]
+        )
+        if proc.returncode != 0:
+            logging.warning('repo already exists, skipping...')
+
+        click.echo()
+
+    logging.info('...done.')
+
+
+if __name__ == '__main__':
+    main()

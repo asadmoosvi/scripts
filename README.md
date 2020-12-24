@@ -9,6 +9,7 @@
 - hn.py (fetch the top hackernews links of the day)
 - word.py (get the definition of a word)
     - this is provided by the unofficial google api at [dictionaryapi.dev](https://dictionaryapi.dev/)
+- clone-repos (clone a github user's repos)
 
 ## where to get the keys?
 
