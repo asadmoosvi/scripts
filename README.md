@@ -10,6 +10,7 @@
 - word.py (get the definition of a word)
     - this is provided by the unofficial google api at [dictionaryapi.dev](https://dictionaryapi.dev/)
 - clone-repos (clone a github user's repos)
+- pull-all.py (git pull all repos that can be found in `~/Code/github/`)
 
 ## where to get the keys?
 

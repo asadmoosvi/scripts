@@ -1,0 +1,40 @@
+#!/usr/bin/env python3
+import os
+import subprocess
+import sys
+from pathlib import Path
+
+GIT_REPOS_DIR = Path.home() / 'Code' / 'github'
+
+
+def log(msg: str, err: bool = False) -> None:
+    stream = sys.stderr if err else sys.stdout
+    print(f'==> {msg}', file=stream)
+
+
+def main() -> int:
+    if not GIT_REPOS_DIR.is_dir():
+        log(f'ERROR: directory `{GIT_REPOS_DIR}` does not exist', err=True)
+        return 1
+
+    repo_count = 0
+    for root, dirs, _ in os.walk(GIT_REPOS_DIR):
+        if '.git' in dirs:
+            repo_count += 1
+            repo_name = os.path.basename(root)
+            log(
+                f'{repo_count}. Updating git repo {repo_name!r}'
+                f' at path {root!r} ...'
+            )
+            subprocess.run(['git', '-C', root, 'pull'])
+
+            # do not go into .git folder
+            dirs.clear()
+            print()
+
+    print('...done.')
+    return 0
+
+
+if __name__ == '__main__':
+    sys.exit(main())
