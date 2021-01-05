@@ -11,6 +11,7 @@
     - this is provided by the unofficial google api at [dictionaryapi.dev](https://dictionaryapi.dev/)
 - clone-repos (clone a github user's repos)
 - pull-all.py (git pull all repos that can be found in `~/Code/github/`)
+- wttr (helper script to get weather info from wttr.in)
 
 ## where to get the keys?
 
