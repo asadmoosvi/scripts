@@ -1,0 +1,56 @@
+#!/usr/bin/env python3
+import webbrowser
+
+import click
+
+
+@click.command()
+@click.help_option('-h', '-?', '--help')
+@click.argument('query')
+@click.option(
+    '-y',
+    '--youtube',
+    'website',
+    flag_value='youtube',
+    help='Search for results on youtube.',
+)
+@click.option(
+    '-g',
+    '--google',
+    'website',
+    flag_value='google',
+    help='Search for results on google.',
+)
+@click.option(
+    '-r',
+    '--reddit',
+    'website',
+    flag_value='reddit',
+    help='Search for results on reddit.',
+)
+def main(query: str, website: str) -> None:
+    """This script allows you to make a search on one of several websites
+    and open the results page in the browser.
+
+    QUERY is the search term to fetch results for.
+    """
+    websites = dict(
+        youtube='https://www.youtube.com/results?search_query={}',
+        google='https://www.google.com/search?q={}',
+        reddit='https://www.reddit.com/search?q={}',
+    )
+
+    if website is None:
+        # default website to search is google
+        website = 'google'
+
+    url = websites[website].format(query)
+    click.echo(
+        f'==> Opening search results for {query!r} on website'
+        f' {website!r} in the browser.'
+    )
+    webbrowser.open(url)
+
+
+if __name__ == '__main__':
+    main()
