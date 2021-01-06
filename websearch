@@ -32,6 +32,7 @@ def main(query: str, website: str) -> None:
     """This script allows you to make a search on one of several websites
     and open the results page in the browser.
 
+    The default website to search results on is Google.
     QUERY is the search term to fetch results for.
     """
     websites = dict(
