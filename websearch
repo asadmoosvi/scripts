@@ -28,6 +28,12 @@ import click
     flag_value='reddit',
     help='Search for results on reddit.',
 )
+@click.option(
+    '--github',
+    'website',
+    flag_value='github',
+    help='Search for results on github.',
+)
 def main(query: str, website: str) -> None:
     """This script allows you to make a search on one of several websites
     and open the results page in the browser.
@@ -39,6 +45,7 @@ def main(query: str, website: str) -> None:
         youtube='https://www.youtube.com/results?search_query={}',
         google='https://www.google.com/search?q={}',
         reddit='https://www.reddit.com/search?q={}',
+        github='https://www.github.com/search?q={}',
     )
 
     if website is None:
