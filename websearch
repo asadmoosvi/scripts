@@ -25,6 +25,13 @@ import click
     help='Search for results on google.',
 )
 @click.option(
+    '-d',
+    '--duckduckgo',
+    'website',
+    flag_value='duckduckgo',
+    help='Search for results on duckduckgo.',
+)
+@click.option(
     '-r',
     '--reddit',
     'website',
@@ -73,6 +80,7 @@ def main(query: str, website: str, incognito: bool) -> None:
         google='https://www.google.com/search?q={}',
         reddit='https://www.reddit.com/search?q={}',
         github='https://www.github.com/search?q={}',
+        duckduckgo='https://www.duckduckgo.com?q={}',
     )
 
     if website is None:
