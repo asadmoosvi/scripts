@@ -15,34 +15,34 @@ import click
     '--youtube',
     'website',
     flag_value='youtube',
-    help='Search for results on youtube.',
+    help='Search on youtube.',
 )
 @click.option(
     '-g',
     '--google',
     'website',
     flag_value='google',
-    help='Search for results on google.',
+    help='Search on google.',
 )
 @click.option(
     '-d',
     '--duckduckgo',
     'website',
     flag_value='duckduckgo',
-    help='Search for results on duckduckgo.',
+    help='Search on duckduckgo.',
 )
 @click.option(
     '-r',
     '--reddit',
     'website',
     flag_value='reddit',
-    help='Search for results on reddit.',
+    help='Search on reddit.',
 )
 @click.option(
     '--github',
     'website',
     flag_value='github',
-    help='Search for results on github.',
+    help='Search on github.',
 )
 @click.option(
     '-i',
