@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 import subprocess
-from typing import Tuple
+from typing import List, Tuple
 
 import click
 
@@ -21,16 +21,42 @@ def play_song(song: str) -> None:
 
 @click.command()
 @click.argument('songs', nargs=-1)
+@click.option(
+    '-f',
+    '--songs-file',
+    type=click.Path(exists=True),
+    help=(
+        'Name of songs file containing list of song names'
+        ' separated with a newline.'
+    ),
+)
 @click.help_option('-h', '--help')
-def main(songs: Tuple[str, ...]) -> None:
+@click.pass_context
+def main(ctx: click.Context, songs: Tuple[str, ...], songs_file: str) -> None:
     """Search for songs on youtube and play only their audio using mpv."""
+    songs_list: List[str] = []
+    songs_list.extend(songs)
+    if songs_file:
+        with open(songs_file) as f:
+            songs_list.extend([song_name.strip() for song_name in f])
+
+    if not songs_list:
+        click.secho(
+            'ERROR: no song names received as input. If you are using a song '
+            'names file, ensure that it is not empty.',
+            err=True,
+            fg='red',
+            bold=True,
+        )
+        ctx.exit(1)
+
     click.secho(
-        f'Songs list: {", ".join(songs)}\n',
+        f'Songs list: {", ".join(songs_list)}\n',
         err=True,
         fg='magenta',
         bold=True,
     )
-    for song in songs:
+    for song in songs_list:
         play_song(song)
 
 
