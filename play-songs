@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import subprocess
+import shutil
 from typing import List, Tuple
 
 import click
@@ -34,6 +35,17 @@ def play_song(song: str) -> None:
 @click.pass_context
 def main(ctx: click.Context, songs: Tuple[str, ...], songs_file: str) -> None:
     """Search for songs on youtube and play only their audio using mpv."""
+    # ensure mpv and youtube-dl are installed
+    if not (shutil.which('mpv') and shutil.which('youtube-dl')):
+        click.secho(
+            'ERROR: please make sure you have installed mpv and youtube-dl '
+            'as dependencies before running this script.',
+            err=True,
+            fg='red',
+            bold=True,
+        )
+        ctx.exit(1)
+
     songs_list: List[str] = []
     songs_list.extend(songs)
     if songs_file:
