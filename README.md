@@ -13,6 +13,8 @@
 - pull-all.py (git pull all repos that can be found in `~/Code/github/`)
 - wttr (helper script to get weather info from wttr.in)
 - websearch (search for something on one of several websites and open in browser)
+- play-songs (search for songs using youtube-dl then play their audio using mpv)
+
 
 ## where to get the keys?
 

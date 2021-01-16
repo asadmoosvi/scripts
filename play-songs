@@ -1,0 +1,38 @@
+#!/usr/bin/env python3
+import subprocess
+from typing import Tuple
+
+import click
+
+
+def play_song(song: str) -> None:
+    click.secho(
+        f'Searching for song {song!r} ...', err=True, fg='green', bold=True
+    )
+    proc = subprocess.run(
+        ['youtube-dl', '-x', '--get-url', f'ytsearch: {song}'],
+        capture_output=True,
+        text=True,
+    )
+    click.secho('Playing song ...\n', err=True, fg='green', bold=True)
+    subprocess.run(['mpv', proc.stdout])
+    click.echo(err=True)
+
+
+@click.command()
+@click.argument('songs', nargs=-1)
+@click.help_option('-h', '--help')
+def main(songs: Tuple[str, ...]) -> None:
+    """Search for songs on youtube and play only their audio using mpv."""
+    click.secho(
+        f'Songs list: {", ".join(songs)}\n',
+        err=True,
+        fg='magenta',
+        bold=True,
+    )
+    for song in songs:
+        play_song(song)
+
+
+if __name__ == '__main__':
+    main()
