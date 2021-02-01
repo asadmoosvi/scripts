@@ -2,6 +2,7 @@
 import shutil
 import subprocess
 import textwrap
+import random
 from typing import List, Tuple
 
 import click
@@ -32,9 +33,12 @@ def play_song(song: str) -> None:
         ' separated with a newline.'
     ),
 )
+@click.option('-s', '--shuffle', is_flag=True, help='Shuffle songs.')
 @click.help_option('-h', '--help')
 @click.pass_context
-def main(ctx: click.Context, songs: Tuple[str, ...], songs_file: str) -> None:
+def main(
+    ctx: click.Context, songs: Tuple[str, ...], songs_file: str, shuffle: bool
+) -> None:
     """Search for songs on youtube and play only their audio using mpv."""
     # ensure mpv and youtube-dl are installed
     if not (shutil.which('mpv') and shutil.which('youtube-dl')):
@@ -62,6 +66,9 @@ def main(ctx: click.Context, songs: Tuple[str, ...], songs_file: str) -> None:
             bold=True,
         )
         ctx.exit(1)
+
+    if shuffle:
+        random.shuffle(songs_list)
 
     songs_list_str = '\n'.join(songs_list)
     click.secho(
