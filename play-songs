@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
+import random
 import shutil
 import subprocess
 import textwrap
-import random
 from typing import List, Tuple
 
 import click
@@ -34,10 +34,17 @@ def play_song(song: str) -> None:
     ),
 )
 @click.option('-s', '--shuffle', is_flag=True, help='Shuffle songs.')
+@click.option(
+    '-l', '--loop', is_flag=True, help='Continuously play songs in a loop.'
+)
 @click.help_option('-h', '--help')
 @click.pass_context
 def main(
-    ctx: click.Context, songs: Tuple[str, ...], songs_file: str, shuffle: bool
+    ctx: click.Context,
+    songs: Tuple[str, ...],
+    songs_file: str,
+    shuffle: bool,
+    loop: bool,
 ) -> None:
     """Search for songs on youtube and play only their audio using mpv."""
     # ensure mpv and youtube-dl are installed
@@ -77,8 +84,17 @@ def main(
         fg='magenta',
         bold=True,
     )
-    for song in songs_list:
-        play_song(song)
+
+    if loop:
+        click.secho('Loop is on.\n', fg='bright_green', err=True)
+    else:
+        click.secho('Loop is off.\n', fg='bright_red', err=True)
+
+    while True:
+        for song in songs_list:
+            play_song(song)
+        if not loop:
+            break
 
 
 if __name__ == '__main__':
