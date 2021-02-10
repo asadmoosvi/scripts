@@ -45,6 +45,13 @@ import click
     help='Search on github.',
 )
 @click.option(
+    '-p',
+    '--piratebay',
+    'website',
+    flag_value='piratebay',
+    help='Search on piratebay.',
+)
+@click.option(
     '-i',
     '--incognito',
     is_flag=True,
@@ -81,6 +88,7 @@ def main(query: str, website: str, incognito: bool) -> None:
         reddit='https://www.reddit.com/search?q={}',
         github='https://www.github.com/search?q={}',
         duckduckgo='https://www.duckduckgo.com?q={}',
+        piratebay='https://thepiratebay0.org/search/{}/1/99/0',
     )
 
     if website is None:
