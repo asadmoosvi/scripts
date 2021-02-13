@@ -14,6 +14,7 @@
 - wttr (helper script to get weather info from wttr.in)
 - websearch (search for something on one of several websites and open in browser)
 - play-songs (search for songs using youtube-dl then play their audio using mpv)
+- fake-ua (get a fake user agent)
 
 
 ## where to get the keys?
