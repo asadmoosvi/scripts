@@ -104,7 +104,7 @@ def main(movie: str, tv: str, limit: int, imdb_open: bool) -> None:
             imdb_type = "series"
 
         movie_results = list()
-        for idx, result in enumerate(results):
+        for idx, result in enumerate(results, 1):
             title = "+".join(result["Name"].split())
             omdb_url = endpoint_url.format(
                 OMDB_KEY=OMDB_KEY,
@@ -117,7 +117,7 @@ def main(movie: str, tv: str, limit: int, imdb_open: bool) -> None:
             try:
                 imdb_link = f"https://imdb.com/title/{json_response['imdbID']}"
                 movie_title = json_response['Title']
-                info(f'Found title {movie_title!r}')
+                info(f'{idx}. Found title {movie_title!r}')
                 movie_results.append(
                     dict(
                         title=movie_title,
