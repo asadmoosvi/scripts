@@ -2,12 +2,12 @@
 
 import os
 import sys
+import webbrowser
+from typing import Dict, List
+
 import click
 import requests
-import webbrowser
 from dotenv import load_dotenv
-from typing import List, Dict
-
 
 load_dotenv()
 TASTEDIVE_KEY = os.getenv("TASTEDIVE_KEY")
@@ -103,6 +103,7 @@ def main(movie: str, tv: str, limit: int, imdb_open: bool) -> None:
         elif _type == "shows":
             imdb_type = "series"
 
+        movie_results = list()
         for idx, result in enumerate(results):
             title = "+".join(result["Name"].split())
             omdb_url = endpoint_url.format(
@@ -113,24 +114,45 @@ def main(movie: str, tv: str, limit: int, imdb_open: bool) -> None:
             response = requests.get(omdb_url)
             response.raise_for_status()
             json_response = response.json()
-            click.echo(f"[{idx+1}]")
             try:
                 imdb_link = f"https://imdb.com/title/{json_response['imdbID']}"
-                click.echo(
-                    f"    Title :  {json_response['Title']}\n"
-                    f"    Year  :  {json_response['Year']}\n"
-                    f"    Rated :  {json_response['Rated']}\n"
-                    f"    Genre :  {json_response['Genre']}\n"
-                    f"    Rating:  {json_response['imdbRating']}\n"
-                    f"    Votes :  {json_response['imdbVotes']}\n"
-                    f"    Link  :  {imdb_link}"
+                movie_title = json_response['Title']
+                info(f'Found title {movie_title!r}')
+                movie_results.append(
+                    dict(
+                        title=movie_title,
+                        year=json_response['Year'],
+                        rated=json_response['Rated'],
+                        genre=json_response['Genre'],
+                        rating=json_response['imdbRating'],
+                        votes=json_response['imdbVotes'],
+                        link=imdb_link,
+                    )
                 )
-                if imdb_open:
-                    click.echo()
-                    info(f"Opening IMDb link for `{json_response['Title']}`")
-                    webbrowser.open(imdb_link)
             except KeyError:
-                click.echo("    [Unknown]")
+                pass
+        # sort results by rating
+        click.echo()
+        info('Sorting results by rating (lowest first) ...')
+        movie_results = sorted(
+            movie_results,
+            key=lambda movie: float(movie['rating']),
+        )
+
+        click.echo()
+        for idx, movie_result in enumerate(movie_results, 1):
+            click.echo(f'[{idx}]')
+            click.echo(f'    Title     : {movie_result["title"]}')
+            click.echo(f'    Year      : {movie_result["year"]}')
+            click.echo(f'    Rated     : {movie_result["rated"]}')
+            click.echo(f'    Genre     : {movie_result["genre"]}')
+            click.echo(f'    Rating    : {movie_result["rating"]}')
+            click.echo(f'    Votes     : {movie_result["votes"]}')
+            click.echo(f'    IMDb Link : {movie_result["link"]}')
+            if imdb_open:
+                click.echo()
+                info(f"Opening IMDb link for `{movie_result['title']}`")
+                webbrowser.open(movie_result['link'])
             click.echo()
 
 
