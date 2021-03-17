@@ -53,6 +53,9 @@ def fetch_results(query: str, _type: str, limit: int) -> List[Dict]:
 @click.option("-m", "--movie", help="Movie query.")
 @click.option("-t", "--tv", help="TV show query.")
 @click.option(
+    "-r", "--rating", default=0.0, help="Filter results by minimum rating."
+)
+@click.option(
     "-l",
     "--limit",
     default=10,
@@ -67,7 +70,9 @@ def fetch_results(query: str, _type: str, limit: int) -> List[Dict]:
     help="Open IMDb links in browser.",
 )
 @click.help_option("-h", "--help")
-def main(movie: str, tv: str, limit: int, imdb_open: bool) -> None:
+def main(
+    movie: str, tv: str, limit: int, imdb_open: bool, rating: int
+) -> None:
     if movie is not None:
         query = movie
         _type = "movies"
@@ -118,28 +123,37 @@ def main(movie: str, tv: str, limit: int, imdb_open: bool) -> None:
                 imdb_link = f"https://imdb.com/title/{json_response['imdbID']}"
                 movie_title = json_response['Title']
                 info(f'{idx}. Found title {movie_title!r}')
-                movie_results.append(
-                    dict(
-                        title=movie_title,
-                        year=json_response['Year'],
-                        rated=json_response['Rated'],
-                        genre=json_response['Genre'],
-                        rating=json_response['imdbRating'],
-                        votes=json_response['imdbVotes'],
-                        link=imdb_link,
+                movie_rating = float(json_response['imdbRating'])
+                if movie_rating > rating:
+                    movie_results.append(
+                        dict(
+                            title=movie_title,
+                            year=json_response['Year'],
+                            rated=json_response['Rated'],
+                            genre=json_response['Genre'],
+                            rating=movie_rating,
+                            votes=json_response['imdbVotes'],
+                            link=imdb_link,
+                        )
                     )
-                )
             except KeyError:
                 pass
         # sort results by rating
         click.echo()
-        info('Sorting results by rating (lowest first) ...')
+        info(
+            'Applying filters and sorting results by rating (lowest first) ...'
+        )
         movie_results = sorted(
             movie_results,
             key=lambda movie: float(movie['rating']),
         )
 
-        click.echo()
+        if not movie_results:
+            info('No results found.')
+            return
+        else:
+            info(f'{len(movie_results)} results found.\n')
+
         for idx, movie_result in enumerate(movie_results, 1):
             click.echo(f'[{idx}]')
             click.echo(f'    Title     : {movie_result["title"]}')
