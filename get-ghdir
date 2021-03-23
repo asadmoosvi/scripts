@@ -1,0 +1,40 @@
+#!/usr/bin/env python3
+import subprocess
+import sys
+from shutil import which
+
+import click
+
+
+def to_svn_url(github_url):
+    return github_url.replace('tree/master', 'trunk')
+
+
+def export_svn_dir(svn_url):
+    if not which('svn'):
+        click.echo(
+            'ERROR: svn is not installed. Please install it first.', err=True
+        )
+        sys.exit(1)
+
+    subprocess.run(['svn', 'export', svn_url])
+
+
+def download_github_dir(github_url):
+    svn_url = to_svn_url(github_url)
+    export_svn_dir(svn_url)
+
+
+@click.command()
+@click.argument('url')
+@click.help_option('-h')
+def main(url: str):
+    """Download a specific github directory
+    from URL to the current directory."""
+    click.echo(f'==> Downloading github directory from url: {url!r} ...')
+    download_github_dir(url)
+    click.echo('==> Done.')
+
+
+if __name__ == '__main__':
+    main()

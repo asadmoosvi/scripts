@@ -15,6 +15,7 @@
 - websearch (search for something on one of several websites and open in browser)
 - play-songs (search for songs using youtube-dl then play their audio using mpv)
 - fake-ua (get a fake user agent)
+- get-ghdir (download a specific directory from a repo on github)
 
 
 ## where to get the keys?
