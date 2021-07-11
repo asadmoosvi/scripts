@@ -3,7 +3,7 @@
 import os
 import subprocess
 import sys
-from shutil import which
+from shutil import which, get_terminal_size
 
 import click
 import requests
@@ -38,7 +38,7 @@ def main(word, play, save):
     click.secho(f"{word}", fg="bright_green")
     click.secho("pronunciation: ", fg="cyan", bold=True, nl=False)
     click.secho(f"{pronunciation}", fg="bright_green")
-    click.secho("=" * click.get_terminal_size()[0], fg="magenta")
+    click.secho("=" * get_terminal_size()[0], fg="magenta")
 
     for meaning in meanings:
         part_of_speech = meaning["partOfSpeech"]
@@ -57,7 +57,7 @@ def main(word, play, save):
                 click.secho(f"{v}", fg="bright_green")
             click.echo()
 
-        click.secho("-" * click.get_terminal_size()[0], fg="magenta")
+        click.secho("-" * get_terminal_size()[0], fg="magenta")
 
     if play:
         if not which("mpv"):
