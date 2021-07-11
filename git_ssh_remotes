@@ -23,7 +23,7 @@ def main():
                 domain, username, repo = origin_url_components[-3:]
                 new_origin_url = f'git@{domain}:{username}/{repo}'
                 print(
-                    f'Renaming origin url {origin_url!r} --> {new_origin_url!r}'
+                    f'({root}) Renaming origin url {origin_url!r} --> {new_origin_url!r}'
                 )
                 run_git_cmd(root, f'remote set-url origin {new_origin_url}')
                 count += 1
