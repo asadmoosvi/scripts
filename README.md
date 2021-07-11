@@ -16,6 +16,7 @@
 - play-songs (search for songs using youtube-dl then play their audio using mpv)
 - fake-ua (get a fake user agent)
 - get-ghdir (download a specific directory from a repo on github)
+- git_ssh_remotes (rename all git remote http origins recursively under current directory to use ssh instead)
 
 
 ## where to get the keys?
