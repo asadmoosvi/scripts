@@ -2,6 +2,7 @@
 
 import os
 import subprocess
+import sys
 
 
 def run_git_cmd(path, cmd):
@@ -13,7 +14,19 @@ def run_git_cmd(path, cmd):
     return cp.stdout.strip()
 
 
+def confirm_action():
+    user_input = input(
+        'Are you sure you would like to rename all origins?\n'
+        'This process is recursive under the current directory.\n'
+        'Type yes to continue: '
+    )
+    if user_input.casefold() != 'yes':
+        print('Aborting!', file=sys.stderr)
+        sys.exit(1)
+
+
 def main():
+    confirm_action()
     count = 0
     for root, dirs, files in os.walk('.'):
         if '.git' in dirs:
