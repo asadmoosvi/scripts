@@ -4,7 +4,7 @@ import subprocess
 import sys
 from pathlib import Path
 
-GIT_REPOS_DIR = Path.home() / 'Code' / 'github'
+GIT_REPOS_DIR = Path.home() / 'Code' / 'repos'
 
 
 def log(msg: str, err: bool = False) -> None:
