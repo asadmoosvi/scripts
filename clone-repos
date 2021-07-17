@@ -22,6 +22,10 @@ logging.basicConfig(level=logging.INFO, format='[%(levelname)s] %(message)s')
 @click.pass_context
 def main(ctx: click.Context, user: str, dest: str) -> None:
     """Clone github repositories of USER into a destination directory."""
+    # allow a forward slash at the end of a username
+    # this is so autocomplete in the shell doesn't result in an error
+    if user.endswith('/'):
+        user = user[:-1]
     response = requests.get(f'https://api.github.com/users/{user}/repos')
     if response.status_code != requests.codes.ok:
         logging.error(f'user {user!r} not found')
