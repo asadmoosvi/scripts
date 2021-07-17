@@ -18,9 +18,15 @@ logging.basicConfig(level=logging.INFO, format='[%(levelname)s] %(message)s')
     show_default=True,
     help="Destination directory where the user's repositories will be stored.",
 )
+@click.option(
+    '-i',
+    '--interactive',
+    is_flag=True,
+    help='Confirm each repository to clone.',
+)
 @click.help_option('-h', '--help')
 @click.pass_context
-def main(ctx: click.Context, user: str, dest: str) -> None:
+def main(ctx: click.Context, user: str, dest: str, interactive) -> None:
     """Clone github repositories of USER into a destination directory."""
     # allow a forward slash at the end of a username
     # this is so autocomplete in the shell doesn't result in an error
@@ -41,8 +47,14 @@ def main(ctx: click.Context, user: str, dest: str) -> None:
         f'cloning {total_repos} repositories of user {user!r} into {repos_dir}\n'
     )
 
-    for repo in json_response:
+    for idx, repo in enumerate(json_response, 1):
         repo_name, repo_url = repo['name'], repo['html_url']
+        logging.info(f'{idx}. {repo_url}')
+        if interactive:
+            continue_cloning = click.confirm('do you wish to clone this repo?')
+            if not continue_cloning:
+                logging.info('skippping...\n')
+                continue
         proc = subprocess.run(
             ['git', 'clone', repo_url, repos_dir / repo_name]
         )
