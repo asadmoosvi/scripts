@@ -29,12 +29,15 @@ def main(ctx: click.Context, user: str, dest: str) -> None:
 
     repos_dir = Path(dest) / user
     repos_dir.mkdir(exist_ok=True, parents=True)
-    logging.info(f'cloning repositories of user {user!r} into {repos_dir}\n')
 
+    json_response = response.json()
     total_cloned = 0
-    total_repos = 0
-    for repo in response.json():
-        total_repos += 1
+    total_repos = len(json_response)
+    logging.info(
+        f'cloning {total_repos} repositories of user {user!r} into {repos_dir}\n'
+    )
+
+    for repo in json_response:
         repo_name, repo_url = repo['name'], repo['html_url']
         proc = subprocess.run(
             ['git', 'clone', repo_url, repos_dir / repo_name]
