@@ -1,13 +1,14 @@
 #!/usr/bin/env python3
 import subprocess
 import sys
+import re
 from shutil import which
 
 import click
 
 
 def to_svn_url(github_url):
-    return github_url.replace('tree/master', 'trunk')
+    return re.sub('tree/(main|master)', 'trunk', github_url)
 
 
 def export_svn_dir(svn_url):
