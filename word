@@ -32,7 +32,7 @@ def main(word, play, save):
         sys.exit(1)
 
     result = response.json()[0]
-    pronunciation = 'https:' + result["phonetics"][0]["audio"]
+    pronunciation = result["phonetics"][0]["audio"]
     meanings = result["meanings"]
     click.secho("word: ", fg="cyan", bold=True, nl=False)
     click.secho(f"{word}", fg="bright_green")
