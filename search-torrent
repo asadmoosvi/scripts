@@ -3,6 +3,7 @@
 import click
 import requests
 import subprocess
+import shutil
 from bs4 import BeautifulSoup
 
 
@@ -45,8 +46,7 @@ def main(search, no_pager) -> None:
         text = "download torrent"
         target = magnet_link
         hyperlink = (
-            f"\u001b[1m\u001b]8;;{target}\u001b\\{text}"
-            f"\u001b]8;;\u001b\\\u001b[0m"
+            f"\u001b[1m\u001b]8;;{target}\u001b\\{text}" f"\u001b]8;;\u001b\\\u001b[0m"
         )
         string_results.append(
             f"Name        : {name}\n"
@@ -56,7 +56,7 @@ def main(search, no_pager) -> None:
             f"===> {hyperlink}"
         )
 
-    sep = "\n\n" + "=" * click.get_terminal_size()[0] + "\n\n"
+    sep = "\n\n" + "=" * shutil.get_terminal_size()[0] + "\n\n"
     if string_results:
         if no_pager:
             click.echo(sep.join(string_results))
