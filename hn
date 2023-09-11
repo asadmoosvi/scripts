@@ -17,9 +17,7 @@ class HNRecord(NamedTuple):
 
     def __str__(self):
         return (
-            f"Title: {self.title}\n"
-            f"Link: {self.link}\n"
-            f"Upvotes: {self.upvotes}\n"
+            f"Title: {self.title}\n" f"Link: {self.link}\n" f"Upvotes: {self.upvotes}\n"
         )
 
 

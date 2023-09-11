@@ -5,12 +5,12 @@ from fake_useragent import UserAgent
 
 
 @click.command()
-@click.argument('browser', default='random')
+@click.argument("browser", default="random")
 def main(browser: str) -> None:
     """Get a Fake User-Agent for BROWSER. By default you get a random one."""
     ua = UserAgent()
     print(getattr(ua, browser.casefold()))
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

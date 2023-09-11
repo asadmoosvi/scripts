@@ -6,47 +6,41 @@ from pathlib import Path
 import click
 import requests
 
-logging.basicConfig(level=logging.INFO, format='[%(levelname)s] %(message)s')
+logging.basicConfig(level=logging.INFO, format="[%(levelname)s] %(message)s")
 
 
 @click.command()
-@click.argument('user')
+@click.argument("user")
 @click.option(
-    '-d',
-    '--dest',
+    "-d",
+    "--dest",
     default=str(Path.cwd()),
     show_default=True,
     help="Destination directory where the user's repositories will be stored.",
 )
 @click.option(
-    '-i',
-    '--interactive',
+    "-i",
+    "--interactive",
     is_flag=True,
-    help='Confirm each repository to clone.',
+    help="Confirm each repository to clone.",
 )
 @click.option(
-    '-s',
-    '--ssh-url',
+    "-s",
+    "--ssh-url",
     is_flag=True,
-    help='Use SSH url for the repos. (default is https)'
+    help="Use SSH url for the repos. (default is https)",
 )
-@click.help_option('-h', '--help')
+@click.help_option("-h", "--help")
 @click.pass_context
-def main(
-    ctx: click.Context,
-    user: str,
-    dest: str,
-    interactive,
-    ssh_url: bool
-) -> None:
+def main(ctx: click.Context, user: str, dest: str, interactive, ssh_url: bool) -> None:
     """Clone github repositories of USER into a destination directory."""
     # allow a forward slash at the end of a username
     # this is so autocomplete in the shell doesn't result in an error
-    if user.endswith('/'):
+    if user.endswith("/"):
         user = user[:-1]
-    response = requests.get(f'https://api.github.com/users/{user}/repos')
+    response = requests.get(f"https://api.github.com/users/{user}/repos")
     if response.status_code != requests.codes.ok:
-        logging.error(f'user {user!r} not found')
+        logging.error(f"user {user!r} not found")
         ctx.exit(1)
 
     repos_dir = Path(dest) / user
@@ -56,33 +50,31 @@ def main(
     total_cloned = 0
     total_repos = len(json_response)
     logging.info(
-        f'cloning {total_repos} repositories of user {user!r} into {repos_dir}\n'
+        f"cloning {total_repos} repositories of user {user!r} into {repos_dir}\n"
     )
 
     for idx, repo in enumerate(json_response, 1):
-        repo_name, repo_url = repo['name'], repo['html_url']
+        repo_name, repo_url = repo["name"], repo["html_url"]
         # if ssh url is selected
         if ssh_url:
-            repo_url = repo['ssh_url']
-        logging.info(f'{idx}. {repo_url}')
+            repo_url = repo["ssh_url"]
+        logging.info(f"{idx}. {repo_url}")
         if interactive:
-            continue_cloning = click.confirm('do you wish to clone this repo?')
+            continue_cloning = click.confirm("do you wish to clone this repo?")
             if not continue_cloning:
-                logging.info('skippping...\n')
+                logging.info("skippping...\n")
                 continue
-        proc = subprocess.run(
-            ['git', 'clone', repo_url, repos_dir / repo_name]
-        )
+        proc = subprocess.run(["git", "clone", repo_url, repos_dir / repo_name])
         if proc.returncode != 0:
-            logging.warning('repo already exists, skipping...')
+            logging.warning("repo already exists, skipping...")
         else:
             total_cloned += 1
 
         click.echo()
 
-    logging.info('...done.')
-    logging.info(f'{total_cloned} cloned out of {total_repos} repos.')
+    logging.info("...done.")
+    logging.info(f"{total_cloned} cloned out of {total_repos} repos.")
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

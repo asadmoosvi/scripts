@@ -90,9 +90,9 @@ def main() -> int:
             poster_url = val
 
     if args.save_poster:
-        poster_filename = args.name.replace(' ', '_') + "_poster.jpg"
+        poster_filename = args.name.replace(" ", "_") + "_poster.jpg"
         print(f"\n:: Saving poster to file {poster_filename!r}")
-        with open(poster_filename, 'wb') as f:
+        with open(poster_filename, "wb") as f:
             response = requests.get(poster_url)
             response.raise_for_status()
             f.write(response.content)

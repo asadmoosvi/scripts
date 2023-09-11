@@ -52,9 +52,7 @@ def fetch_results(query: str, _type: str, limit: int) -> List[Dict]:
 @click.command(help="Find similar movies/shows using the Tastedive API.")
 @click.option("-m", "--movie", help="Movie query.")
 @click.option("-t", "--tv", help="TV show query.")
-@click.option(
-    "-r", "--rating", default=0.0, help="Filter results by minimum rating."
-)
+@click.option("-r", "--rating", default=0.0, help="Filter results by minimum rating.")
 @click.option(
     "-l",
     "--limit",
@@ -70,9 +68,7 @@ def fetch_results(query: str, _type: str, limit: int) -> List[Dict]:
     help="Open IMDb links in browser.",
 )
 @click.help_option("-h", "--help")
-def main(
-    movie: str, tv: str, limit: int, imdb_open: bool, rating: int
-) -> None:
+def main(movie: str, tv: str, limit: int, imdb_open: bool, rating: int) -> None:
     if movie is not None:
         query = movie
         _type = "movies"
@@ -89,10 +85,7 @@ def main(
     results = fetch_results(query, _type, limit)
 
     if OMDB_KEY is None:
-        info(
-            "OMDB_KEY env variable not found."
-            " Please set it to fetch IMDB info."
-        )
+        info("OMDB_KEY env variable not found." " Please set it to fetch IMDB info.")
         click.echo("\nBasic Results:\n")
         for idx, result in enumerate(results):
             click.echo(f"{idx+1:<2})    {result['Type']:<10}{result['Name']}")
@@ -121,41 +114,39 @@ def main(
             json_response = response.json()
             try:
                 imdb_link = f"https://imdb.com/title/{json_response['imdbID']}"
-                movie_title = json_response['Title']
-                info(f'{idx}. Found title {movie_title!r}')
-                movie_rating = float(json_response['imdbRating'])
+                movie_title = json_response["Title"]
+                info(f"{idx}. Found title {movie_title!r}")
+                movie_rating = float(json_response["imdbRating"])
                 if movie_rating > rating:
                     movie_results.append(
                         dict(
                             title=movie_title,
-                            year=json_response['Year'],
-                            rated=json_response['Rated'],
-                            genre=json_response['Genre'],
+                            year=json_response["Year"],
+                            rated=json_response["Rated"],
+                            genre=json_response["Genre"],
                             rating=movie_rating,
-                            votes=json_response['imdbVotes'],
+                            votes=json_response["imdbVotes"],
                             link=imdb_link,
                         )
                     )
             except KeyError:
-                info(f'{idx}. [WARNING] Unknown IMDb title: {title!r}')
+                info(f"{idx}. [WARNING] Unknown IMDb title: {title!r}")
         # sort results by rating
         click.echo()
-        info(
-            'Applying filters and sorting results by rating (lowest first) ...'
-        )
+        info("Applying filters and sorting results by rating (lowest first) ...")
         movie_results = sorted(
             movie_results,
-            key=lambda movie: float(movie['rating']),
+            key=lambda movie: float(movie["rating"]),
         )
 
         if not movie_results:
-            info('No results found.')
+            info("No results found.")
             return
         else:
-            info(f'{len(movie_results)} results found.\n')
+            info(f"{len(movie_results)} results found.\n")
 
         for idx, movie_result in enumerate(movie_results, 1):
-            click.echo(f'[{idx}]')
+            click.echo(f"[{idx}]")
             click.echo(f'    Title     : {movie_result["title"]}')
             click.echo(f'    Year      : {movie_result["year"]}')
             click.echo(f'    Rated     : {movie_result["rated"]}')
@@ -166,7 +157,7 @@ def main(
             if imdb_open:
                 click.echo()
                 info(f"Opening IMDb link for `{movie_result['title']}`")
-                webbrowser.open(movie_result['link'])
+                webbrowser.open(movie_result["link"])
             click.echo()
 
 

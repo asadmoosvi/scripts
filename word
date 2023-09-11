@@ -11,9 +11,7 @@ import requests
 
 @click.command()
 @click.argument("word")
-@click.option(
-    "-p", "--play", is_flag=True, help="play pronunciation using mpv"
-)
+@click.option("-p", "--play", is_flag=True, help="play pronunciation using mpv")
 @click.option("-s", "--save", is_flag=True, help="save pronunciation to file")
 @click.help_option("-h", "--help")
 def main(word, play, save):
@@ -26,9 +24,7 @@ def main(word, play, save):
     try:
         response.raise_for_status()
     except requests.exceptions.HTTPError:
-        click.secho(
-            f":: word {word!r} not found", fg="bright_yellow", err=True
-        )
+        click.secho(f":: word {word!r} not found", fg="bright_yellow", err=True)
         sys.exit(1)
 
     result = response.json()[0]

@@ -9,35 +9,30 @@ import click
 
 
 def play_song(song: str) -> None:
-    click.secho(
-        f'Searching for song {song!r} ...', err=True, fg='green', bold=True
-    )
+    click.secho(f"Searching for song {song!r} ...", err=True, fg="green", bold=True)
     proc = subprocess.run(
-        ['youtube-dl', '-x', '--get-url', f'ytsearch: {song}'],
+        ["youtube-dl", "-x", "--get-url", f"ytsearch: {song}"],
         capture_output=True,
         text=True,
     )
-    click.secho('Playing song ...\n', err=True, fg='green', bold=True)
-    subprocess.run(['mpv', proc.stdout])
+    click.secho("Playing song ...\n", err=True, fg="green", bold=True)
+    subprocess.run(["mpv", proc.stdout])
     click.echo(err=True)
 
 
 @click.command()
-@click.argument('songs', nargs=-1)
+@click.argument("songs", nargs=-1)
 @click.option(
-    '-f',
-    '--songs-file',
+    "-f",
+    "--songs-file",
     type=click.Path(exists=True),
     help=(
-        'Name of songs file containing list of song names'
-        ' separated with a newline.'
+        "Name of songs file containing list of song names" " separated with a newline."
     ),
 )
-@click.option('-s', '--shuffle', is_flag=True, help='Shuffle songs.')
-@click.option(
-    '-l', '--loop', is_flag=True, help='Continuously play songs in a loop.'
-)
-@click.help_option('-h', '--help')
+@click.option("-s", "--shuffle", is_flag=True, help="Shuffle songs.")
+@click.option("-l", "--loop", is_flag=True, help="Continuously play songs in a loop.")
+@click.help_option("-h", "--help")
 @click.pass_context
 def main(
     ctx: click.Context,
@@ -48,12 +43,12 @@ def main(
 ) -> None:
     """Search for songs on youtube and play only their audio using mpv."""
     # ensure mpv and youtube-dl are installed
-    if not (shutil.which('mpv') and shutil.which('youtube-dl')):
+    if not (shutil.which("mpv") and shutil.which("youtube-dl")):
         click.secho(
-            'ERROR: please make sure you have installed mpv and youtube-dl '
-            'as dependencies before running this script.',
+            "ERROR: please make sure you have installed mpv and youtube-dl "
+            "as dependencies before running this script.",
             err=True,
-            fg='red',
+            fg="red",
             bold=True,
         )
         ctx.exit(1)
@@ -66,10 +61,10 @@ def main(
 
     if not songs_list:
         click.secho(
-            'ERROR: no song names received as input. If you are using a song '
-            'names file, ensure that it is not empty.',
+            "ERROR: no song names received as input. If you are using a song "
+            "names file, ensure that it is not empty.",
             err=True,
-            fg='red',
+            fg="red",
             bold=True,
         )
         ctx.exit(1)
@@ -77,18 +72,18 @@ def main(
     if shuffle:
         random.shuffle(songs_list)
 
-    songs_list_str = '\n'.join(songs_list)
+    songs_list_str = "\n".join(songs_list)
     click.secho(
         f'Songs list:\n{textwrap.indent(songs_list_str, "  - ")}\n',
         err=True,
-        fg='magenta',
+        fg="magenta",
         bold=True,
     )
 
     if loop:
-        click.secho('Loop is on.\n', fg='bright_green', err=True)
+        click.secho("Loop is on.\n", fg="bright_green", err=True)
     else:
-        click.secho('Loop is off.\n', fg='bright_red', err=True)
+        click.secho("Loop is off.\n", fg="bright_red", err=True)
 
     while True:
         for song in songs_list:
@@ -97,5 +92,5 @@ def main(
             break
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

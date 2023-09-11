@@ -8,48 +8,48 @@ import click
 
 
 @click.command()
-@click.help_option('-h', '-?', '--help')
-@click.argument('query')
+@click.help_option("-h", "-?", "--help")
+@click.argument("query")
 @click.option(
-    '-y',
-    '--youtube',
-    'website',
-    flag_value='youtube',
-    help='Search on youtube.',
+    "-y",
+    "--youtube",
+    "website",
+    flag_value="youtube",
+    help="Search on youtube.",
 )
 @click.option(
-    '-d',
-    '--duckduckgo',
-    'website',
-    flag_value='duckduckgo',
-    help='Search on duckduckgo.',
+    "-d",
+    "--duckduckgo",
+    "website",
+    flag_value="duckduckgo",
+    help="Search on duckduckgo.",
 )
 @click.option(
-    '-r',
-    '--reddit',
-    'website',
-    flag_value='reddit',
-    help='Search on reddit.',
+    "-r",
+    "--reddit",
+    "website",
+    flag_value="reddit",
+    help="Search on reddit.",
 )
 @click.option(
-    '-g',
-    '--github',
-    'website',
-    flag_value='github',
-    help='Search on github.',
+    "-g",
+    "--github",
+    "website",
+    flag_value="github",
+    help="Search on github.",
 )
 @click.option(
-    '-p',
-    '--piratebay',
-    'website',
-    flag_value='piratebay',
-    help='Search on piratebay.',
+    "-p",
+    "--piratebay",
+    "website",
+    flag_value="piratebay",
+    help="Search on piratebay.",
 )
 @click.option(
-    '-i',
-    '--incognito',
+    "-i",
+    "--incognito",
     is_flag=True,
-    help='Use incognito mode when searching.',
+    help="Use incognito mode when searching.",
 )
 def main(query: str, website: str, incognito: bool) -> None:
     """This script allows you to make a search on one of several websites
@@ -58,47 +58,42 @@ def main(query: str, website: str, incognito: bool) -> None:
     The default website to search results on is Google.
     QUERY is the search term to fetch results for.
     """
-    chrome_path = shutil.which('google-chrome')
-    firefox_path = shutil.which('firefox')
+    chrome_path = shutil.which("google-chrome")
+    firefox_path = shutil.which("firefox")
 
     if incognito:
         if chrome_path:
-            chrome_path += ' --incognito'
+            chrome_path += " --incognito"
         if firefox_path:
-            firefox_path += ' --private-window'
+            firefox_path += " --private-window"
 
     # prefer using chrome, otherwise firefox
     browser_path = chrome_path or firefox_path
     if browser_path is None:
-        click.echo(
-            '==> ERROR: chrome or firefox not found on this system.', err=True
-        )
-        click.echo('==> Aborting...', err=True)
+        click.echo("==> ERROR: chrome or firefox not found on this system.", err=True)
+        click.echo("==> Aborting...", err=True)
         sys.exit(1)
 
     websites = dict(
-        youtube='https://www.youtube.com/results?search_query={}',
-        google='https://www.google.com/search?q={}',
-        reddit='https://www.reddit.com/search?q={}',
-        github='https://www.github.com/search?q={}',
-        duckduckgo='https://www.duckduckgo.com?q={}',
-        piratebay='https://thepiratebay0.org/search/{}/1/99/0',
+        youtube="https://www.youtube.com/results?search_query={}",
+        google="https://www.google.com/search?q={}",
+        reddit="https://www.reddit.com/search?q={}",
+        github="https://www.github.com/search?q={}",
+        duckduckgo="https://www.duckduckgo.com?q={}",
+        piratebay="https://thepiratebay0.org/search/{}/1/99/0",
     )
 
     if website is None:
         # default website to search is google
-        website = 'google'
+        website = "google"
 
     url = websites[website].format(query)
-    click.echo(
-        f'==> Opening search results for {query!r} on website'
-        f' {website!r}'
-    )
+    click.echo(f"==> Opening search results for {query!r} on website" f" {website!r}")
     click.echo(f'==> Incognito mode is {"on" if incognito else "off"}.')
 
     cmd = shlex.split(browser_path) + [url]
     subprocess.Popen(cmd, stderr=subprocess.DEVNULL, stdout=subprocess.DEVNULL)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

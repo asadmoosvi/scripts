@@ -7,44 +7,42 @@ import sys
 
 def run_git_cmd(path, cmd):
     cp = subprocess.run(
-        ['git', '-C', path] + cmd.split(),
-        capture_output=True,
-        text=True
+        ["git", "-C", path] + cmd.split(), capture_output=True, text=True
     )
     return cp.stdout.strip()
 
 
 def confirm_action():
     user_input = input(
-        'Are you sure you would like to rename all origins?\n'
-        'This process is recursive under the current directory.\n'
-        'Type yes to continue: '
+        "Are you sure you would like to rename all origins?\n"
+        "This process is recursive under the current directory.\n"
+        "Type yes to continue: "
     )
-    if user_input.casefold() != 'yes':
-        print('Aborting!', file=sys.stderr)
+    if user_input.casefold() != "yes":
+        print("Aborting!", file=sys.stderr)
         sys.exit(1)
 
 
 def main():
     confirm_action()
     count = 0
-    for root, dirs, files in os.walk('.'):
-        if '.git' in dirs:
-            origin_url = run_git_cmd(root, 'remote get-url origin')
-            if origin_url.startswith('http'):
-                origin_url_components = origin_url.split('/')
+    for root, dirs, files in os.walk("."):
+        if ".git" in dirs:
+            origin_url = run_git_cmd(root, "remote get-url origin")
+            if origin_url.startswith("http"):
+                origin_url_components = origin_url.split("/")
                 domain, username, repo = origin_url_components[-3:]
-                new_origin_url = f'git@{domain}:{username}/{repo}'
+                new_origin_url = f"git@{domain}:{username}/{repo}"
                 print(
-                    f'({root}) Renaming origin url {origin_url!r} --> {new_origin_url!r}'
+                    f"({root}) Renaming origin url {origin_url!r} --> {new_origin_url!r}"
                 )
-                run_git_cmd(root, f'remote set-url origin {new_origin_url}')
+                run_git_cmd(root, f"remote set-url origin {new_origin_url}")
                 count += 1
             dirs.clear()
-    print(f'==> {count} repository origin urls renamed to use SSH')
+    print(f"==> {count} repository origin urls renamed to use SSH")
 
     return 0
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     exit(main())

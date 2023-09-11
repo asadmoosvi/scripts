@@ -5,18 +5,18 @@ import click
 
 
 @click.command()
-@click.argument('location', required=False)
-@click.help_option('-h', '--help')
+@click.argument("location", required=False)
+@click.help_option("-h", "--help")
 def main(location: str) -> None:
     """Find out the weather of a place.
     LOCATION by default is the current location.
     """
-    wttr_url = 'wttr.in/'
+    wttr_url = "wttr.in/"
     if location is not None:
         wttr_url += location
 
-    subprocess.run(['curl', wttr_url])
+    subprocess.run(["curl", wttr_url])
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
