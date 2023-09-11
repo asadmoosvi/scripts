@@ -88,7 +88,7 @@ def main(query: str, website: str, incognito: bool) -> None:
         website = "google"
 
     url = websites[website].format(query)
-    click.echo(f"==> Opening search results for {query!r} on website" f" {website!r}")
+    click.echo(f"==> Searching for {query!r} on {website!r}")
     click.echo(f'==> Incognito mode is {"on" if incognito else "off"}.')
 
     cmd = shlex.split(browser_path) + [url]
