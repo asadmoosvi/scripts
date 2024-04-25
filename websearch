@@ -46,6 +46,13 @@ import click
     help="Search on piratebay.",
 )
 @click.option(
+    "-c",
+    "--chatgpt",
+    "website",
+    flag_value="chatgpt",
+    help="Search on chatgpt.",
+)
+@click.option(
     "-i",
     "--incognito",
     is_flag=True,
@@ -81,6 +88,7 @@ def main(query: str, website: str, incognito: bool) -> None:
         github="https://www.github.com/search?q={}",
         duckduckgo="https://www.duckduckgo.com?q={}",
         piratebay="https://thepiratebay0.org/search/{}/1/99/0",
+        chatgpt="https://chat.openai.com/chat?q={}",
     )
 
     if website is None:
