@@ -59,11 +59,10 @@ import click
     help="Use incognito mode when searching.",
 )
 def main(query: str, website: str, incognito: bool) -> None:
-    """This script allows you to make a search on one of several websites
-    and open the results page in the browser.
+    """Search for a query on a website and open the results in a browser.
 
-    The default website to search results on is Google.
-    QUERY is the search term to fetch results for.
+    The default website to search is Google.
+    QUERY is the search term to look for.
     """
     chrome_path = shutil.which("google-chrome")
     firefox_path = shutil.which("firefox")
