@@ -51,8 +51,8 @@ def main():
     urls = list(reversed(urls))
 
     if args.list:
-        for url in urls:
-            print(url)
+        for i, url in enumerate(urls):
+            print(f"[{i + 1}] {url}")
         return
 
     if not tracks:
