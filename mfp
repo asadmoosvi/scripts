@@ -24,8 +24,17 @@ def main():
         "Press q to move to the next track. CTRL-C exits the program."
     )
     parser.add_argument("-s", "--shuffle", action="store_true", help="shuffle tracks")
+    parser.add_argument(
+        "-t",
+        "--tracks",
+        type=int,
+        metavar="N",
+        nargs="*",
+        help="specify track numbers to play",
+    )
     args = parser.parse_args()
     shuffle = args.shuffle
+    tracks = args.tracks
 
     logging.info("Loading RSS")
     rss_response = requests.get(rss_url)
@@ -42,9 +51,23 @@ def main():
     if shuffle:
         random.shuffle(urls)
 
-    for url in urls:
-        logging.info(f"Playing file: {url}")
-        subprocess.run(["mpv", url])
+    if not tracks:
+        for url in urls:
+            logging.info(f"Playing file: {url}")
+            subprocess.run(["mpv", url])
+    else:
+        total_tracks = len(urls)
+        for t in set(tracks):
+            # check if track number is invalid
+            t_idx = t - 1
+            if t_idx < 0 or t_idx >= total_tracks:
+                logging.warning(
+                    f"Invalid track number {t}, valid tracks are 1-{total_tracks}"
+                )
+                continue
+            track_url = urls[t_idx]
+            logging.info(f"Playing file: {track_url}")
+            subprocess.run(["mpv", track_url])
 
 
 if __name__ == "__main__":
