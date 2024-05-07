@@ -49,8 +49,6 @@ def main():
         urls.append(link["url"])
 
     urls = list(reversed(urls))
-    if shuffle:
-        random.shuffle(urls)
 
     if args.list:
         for url in urls:
@@ -58,6 +56,8 @@ def main():
         return
 
     if not tracks:
+        if shuffle:
+            random.shuffle(urls)
         for url in urls:
             logging.info(f"Playing file: {url}")
             subprocess.run(["mpv", url])
