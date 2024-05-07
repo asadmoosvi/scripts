@@ -32,6 +32,7 @@ def main():
         nargs="*",
         help="specify track numbers to play",
     )
+    parser.add_argument("-l", "--list", action="store_true", help="list all tracks")
     args = parser.parse_args()
     shuffle = args.shuffle
     tracks = args.tracks
@@ -50,6 +51,11 @@ def main():
     urls = list(reversed(urls))
     if shuffle:
         random.shuffle(urls)
+
+    if args.list:
+        for url in urls:
+            print(url)
+        return
 
     if not tracks:
         for url in urls:
