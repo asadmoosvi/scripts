@@ -16,6 +16,7 @@
 - fake-ua (get a fake user agent)
 - get-ghdir (download a specific directory from a repo on github)
 - git-ssh-remotes (rename all git remote http origins recursively under current directory to use ssh instead)
+- mfp (Play music from https://musicforprogramming.net)
 
 ## where to get the keys?
 

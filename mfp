@@ -1,0 +1,54 @@
+#!/usr/bin/env python3
+
+import argparse
+import logging
+import random
+import subprocess
+from shutil import which
+
+import requests
+from bs4 import BeautifulSoup
+
+logging.basicConfig(format="[%(levelname)s] %(message)s", level=logging.INFO)
+
+
+def main():
+    if not which("mpv"):
+        logging.error("Please install mpv then run the script again.")
+        return
+
+    rss_url = "https://musicforprogramming.net/rss.xml"
+    parser = argparse.ArgumentParser(
+        description="Play music from musicforprogramming.net. "
+        "Plays all tracks in order. "
+        "Press q to move to the next track. CTRL-C exits the program."
+    )
+    parser.add_argument("-s", "--shuffle", action="store_true", help="shuffle tracks")
+    args = parser.parse_args()
+    shuffle = args.shuffle
+
+    logging.info("Loading RSS")
+    rss_response = requests.get(rss_url)
+    rss_response.raise_for_status()
+    rss_text = rss_response.text
+
+    urls = list()
+    soup = BeautifulSoup(rss_text, features="lxml", parser="lxml")
+    link_tags = soup.find_all("enclosure")
+    for link in link_tags:
+        urls.append(link["url"])
+
+    urls = list(reversed(urls))
+    if shuffle:
+        random.shuffle(urls)
+
+    for url in urls:
+        logging.info(f"Playing file: {url}")
+        subprocess.run(["mpv", url])
+
+
+if __name__ == "__main__":
+    try:
+        main()
+    except KeyboardInterrupt:
+        logging.info("Bye!")
