@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 
+import shutil
+import subprocess
+
 import click
 import requests
-import subprocess
-import shutil
 from bs4 import BeautifulSoup
 
 
@@ -40,7 +41,11 @@ def main(search, no_pager) -> None:
             seeders = seeders_leechers[0].text
             leechers = seeders_leechers[1].text
 
-        if not all([category, name, magnet_link, seeders_leechers]):
+        link_info = result.select(".detDesc")
+        if link_info:
+            link_info = link_info[0].text
+
+        if not all([category, name, magnet_link, seeders_leechers, link_info]):
             continue
 
         text = "download torrent"
@@ -53,7 +58,8 @@ def main(search, no_pager) -> None:
             f"Category    : {category}\n"
             f"Seeders     : {seeders}\n"
             f"Leechers    : {leechers}\n"
-            f"===> {hyperlink}"
+            f"Info        : {link_info}\n"
+            f"==> {hyperlink}"
         )
 
     sep = "\n\n" + "=" * shutil.get_terminal_size()[0] + "\n\n"
