@@ -75,6 +75,11 @@ def main(query: str, website: str, incognito: bool) -> None:
 
     # prefer using chrome, otherwise firefox
     browser_path = chrome_path or firefox_path
+    if browser_path and chrome_path:
+        # add touchpad navigation (for linux)
+        # allows 2 finger history navigation like how it works on windows
+        browser_path += " --enable-features=TouchpadOverscrollHistoryNavigation"
+
     if browser_path is None:
         click.echo("==> ERROR: chrome or firefox not found on this system.", err=True)
         click.echo("==> Aborting...", err=True)
