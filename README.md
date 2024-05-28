@@ -9,14 +9,15 @@
 | search-torrent  | search for torrents on piratebay                                                          | python       |
 | hn              | fetch the top hackernews links of the day                                                 | python       |
 | word            | get the definition of a word                                                              | python       |
-| clone-repos     | clone a github user's repository                                                          | python       |
-| pull-all        | git pull all repos that can be found in `~/Code/github/`                                  | python       |
+| clone-repos     | clone a github user's repositories                                                        | python       |
+| pull-all        | git pull all repos that can be found in `~/Code/repos/`                                   | python       |
 | wttr            | helper script to get weather info from wttr.in                                            | python       |
-| websearch       | search for something on one of several websites and open in browser                       | python       |
+| websearch       | search for something on a particular website and open in the browser                      | python       |
 | fake-ua         | get a fake user agent                                                                     | python       |
 | get-ghdir       | download a specific directory from a repo on github                                       | python       |
 | git-ssh-remotes | rename all git remote http origins recursively under current directory to use ssh instead | python       |
-| mfp             | Play music from https://musicforprogramming.net                                           | python       |
+| mfp             | play music from https://musicforprogramming.net                                           | python       |
+| gh-search-clone | search for a github repo and clone it                                                     | gh, fzf      |
 
 ## python instructions
 

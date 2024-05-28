@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+
+# check gh is installed
+if ! command -v gh &> /dev/null || ! command -v fzf &> /dev/null;
+then
+    echo '[error] gh cli or fzf is not installed'
+    exit 1
+fi
+
+cmd_help() {
+    echo "Search for a github repo and clone it"
+    echo -e "\nUsage: gh-search-clone QUERY"
+}
+
+if [[ "$1" == "-h" || "$1" == "--help" ]]; then
+    cmd_help
+    exit 0
+fi
+
+if [[ $# -eq 0 ]]; then
+    echo -e '[error] no arguments provided\n'
+    cmd_help
+    exit 1
+fi
+
+gh search repos $1 | fzf | awk '{print $1}' | xargs gh repo clone
