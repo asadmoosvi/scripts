@@ -17,7 +17,7 @@
 | get-ghdir       | download a specific directory from a repo on github                                       | python       |
 | git-ssh-remotes | rename all git remote http origins recursively under current directory to use ssh instead | python       |
 | mfp             | play music from https://musicforprogramming.net                                           | python       |
-| gh-search-clone | search for a github repo and clone it                                                     | gh, fzf      |
+| gh-search       | search for a github repo and clone it                                                     | gh, fzf      |
 
 ## python instructions
 

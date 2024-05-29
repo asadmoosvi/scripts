@@ -1,0 +1,36 @@
+#!/usr/bin/python3
+
+import argparse
+import logging
+import shutil
+import subprocess
+
+logging.basicConfig(level=logging.INFO, format="[%(levelname)s] %(message)s")
+
+
+def main() -> None:
+    required_tools = ["gh", "fzf"]
+    if not all([shutil.which(tool) for tool in required_tools]):
+        logging.warning(f"Please install the following tools first: {required_tools}")
+        return
+
+    parser = argparse.ArgumentParser(description="Search for repos on github")
+    parser.add_argument("query", help="search query")
+    parser.add_argument(
+        "-c", "--clone", action="store_true", help="clone a repo that was searched"
+    )
+    args = parser.parse_args()
+    gh_search = subprocess.Popen(
+        ["gh", "search", "repos", args.query], stdout=subprocess.PIPE
+    )
+    fzf_output = subprocess.check_output(["fzf"], stdin=gh_search.stdout, text=True)
+    gh_search.wait()
+    repo = fzf_output.split()[0]
+
+    print(fzf_output)
+    if args.clone:
+        subprocess.run(["gh", "repo", "clone", repo])
+
+
+if __name__ == "__main__":
+    main()
