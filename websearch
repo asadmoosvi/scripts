@@ -64,7 +64,7 @@ def main(query: str, website: str, incognito: bool) -> None:
     The default website to search is Google.
     QUERY is the search term to look for.
     """
-    chrome_path = shutil.which("google-chrome")
+    chrome_path = shutil.which("google-chrome") or shutil.which("google-chrome-stable")
     firefox_path = shutil.which("firefox")
 
     if incognito:
