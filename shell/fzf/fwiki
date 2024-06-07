@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+
+source $(dirname "${BASH_SOURCE[0]}")/../include.sh
+
+ensure_installed fd fzf
+
+if ! command -v fd &>/dev/null || ! command -v fzf &>/dev/null; then
+  echo "This script requires fd and fzf."
+  exit 1
+fi
+
+arch_wiki_docs="/usr/share/doc/arch-wiki"
+if [ ! -d $arch_wiki_docs ]; then
+  echo "Arch wiki docs not found."
+  echo "Install it with sudo pacman -S arch-wiki-docs"
+  exit 1
+fi
+
+english_docs="$arch_wiki_docs/html/en"
+cd $english_docs
+doc_html=$(fd . -e html | fzf --header "Select arch wiki page")
+
+if [ "$doc_html" ]; then
+  doc_path="$english_docs/$doc_html"
+  echo "Opening $doc_path in default application"
+  xdg-open "$doc_path" &>/dev/null
+else
+  echo "No selection made"
+fi

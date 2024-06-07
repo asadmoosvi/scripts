@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+
+source $(dirname "${BASH_SOURCE[0]}")/../include.sh
+
+ensure_installed pacman fzf rg
+
+packages=$(
+  pacman -Sl |
+    rg -v '\[installed\]' |
+    fzf -m --header 'Select programs to install' --preview 'pacman -Si {2}' |
+    awk '{print $2}' |
+    tr '\n' ' '
+)
+
+if [ "$packages" ]; then
+  echo "Packages selected: $packages"
+  read -r -p "Install? [y/n] " response
+  if ! [[ "$response" =~ ^([yY])$ ]]; then
+    echo "Aborting"
+    exit 1
+  else
+    echo "Running: sudo pacman -S --confirm $packages"
+    sudo pacman -S --confirm $packages
+  fi
+else
+  echo "No packages selected"
+fi

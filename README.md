@@ -2,6 +2,8 @@
 
 ## scripts included
 
+### python scripts
+
 | Script                 | Description                                                                               | Requirements    |
 | ---------------------- | ----------------------------------------------------------------------------------------- | --------------- |
 | python/omdb            | get information about a movie                                                             | python          |
@@ -19,10 +21,33 @@
 | python/mfp             | play music from https://musicforprogramming.net                                           | python          |
 | python/gh-search       | search for a github repo and clone it                                                     | python, gh, fzf |
 
+### shell scripts
+
+| Script            | Description                                                           | Requirements    |
+| ----------------- | --------------------------------------------------------------------- | --------------- |
+| shell/fzf/fwiki   | search for articles from the arch wiki in the cli                     | fd, fzf         |
+| shell/fzf/fpacman | search for uninstalled arch linux packages using fzf and install them | fd, fzf, pacman |
+
 ## python instructions
 
 In order to use the python scripts, make sure to install the required packages listed in `requirements.txt`. You can do that
 by running `pip3 install --user -r requirements.txt`.
+
+## adding scripts to your path
+
+In order to add the scripts to your PATH variable so you can run them from anywhere the following bash code may be used.
+Make sure to change `scripts_dir` so that it matches where you have stored the repository on your system.
+
+```bash
+#!/usr/bin/env bash
+# add scripts to path
+scripts_dir="$HOME/.scripts"
+for script_dir in $(find "$scripts_dir" -type d -not -path '*/.git*'); do
+  PATH="$PATH:$script_dir"
+done
+export PATH
+
+```
 
 ## api keys
 
