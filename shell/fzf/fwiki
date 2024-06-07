@@ -4,11 +4,6 @@ source $(dirname "${BASH_SOURCE[0]}")/../include.sh
 
 ensure_installed fd fzf
 
-if ! command -v fd &>/dev/null || ! command -v fzf &>/dev/null; then
-  echo "This script requires fd and fzf."
-  exit 1
-fi
-
 arch_wiki_docs="/usr/share/doc/arch-wiki"
 if [ ! -d $arch_wiki_docs ]; then
   echo "Arch wiki docs not found."
