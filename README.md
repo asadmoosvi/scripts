@@ -1,8 +1,6 @@
-# scripts
+# :open_file_folder: Scripts
 
-## scripts included
-
-### python scripts
+## :snake: Python Scripts
 
 | Script                 | Description                                                                               | Requirements    |
 | ---------------------- | ----------------------------------------------------------------------------------------- | --------------- |
@@ -21,19 +19,19 @@
 | python/mfp             | play music from https://musicforprogramming.net                                           | python          |
 | python/gh-search       | search for a github repo and clone it                                                     | python, gh, fzf |
 
-### shell scripts
+## :computer: Shell Scripts
 
 | Script            | Description                                                           | Requirements    |
 | ----------------- | --------------------------------------------------------------------- | --------------- |
 | shell/fzf/fwiki   | search for articles from the arch wiki in the cli                     | fd, fzf         |
 | shell/fzf/fpacman | search for uninstalled arch linux packages using fzf and install them | fd, fzf, pacman |
 
-## python instructions
+## :snake: Python Instructions
 
 In order to use the python scripts, make sure to install the required packages listed in `requirements.txt`. You can do that
 by running `pip3 install --user -r requirements.txt`.
 
-## adding scripts to your path
+## :wrench: Adding Scripts to Your Path
 
 In order to add the scripts to your PATH variable so you can run them from anywhere the following bash code may be used.
 Make sure to change `scripts_dir` so that it matches where you have stored the repository on your system.
@@ -49,7 +47,7 @@ export PATH
 
 ```
 
-## api keys
+## :key: API Keys
 
 - [OMDB API Key](http://www.omdbapi.com/apikey.aspx) for omdb
 - [Tastedive API Key](https://tastedive.com/read/api) for tastedive
