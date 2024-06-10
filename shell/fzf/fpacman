@@ -7,7 +7,9 @@ ensure_installed pacman fzf rg
 packages=$(
   pacman -Sl |
     rg -v '\[installed\]' |
-    fzf -m --header 'Select programs to install' --preview 'pacman -Si {2}' |
+    fzf -m --header 'Select programs to install (ctrl-o to open url)' \
+      --preview 'pacman -Si {2}' \
+      --bind 'ctrl-o:execute-silent(pacman -Si {2} | rg URL | cut -d ":" -f2- | xargs xdg-open)' |
     awk '{print $2}' |
     tr '\n' ' '
 )
