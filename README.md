@@ -37,7 +37,6 @@ In order to add the scripts to your PATH variable so you can run them from anywh
 Make sure to change `scripts_dir` so that it matches where you have stored the repository on your system.
 
 ```bash
-#!/usr/bin/env bash
 # add scripts to path
 scripts_dir="$HOME/.scripts"
 for script_dir in $(find "$scripts_dir" -type d -not -path '*/.git*'); do
@@ -46,6 +45,8 @@ done
 export PATH
 
 ```
+
+You may add this code snippet to your `~/.bashrc` file to make it permanent.
 
 ## :key: API Keys
 
