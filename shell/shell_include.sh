@@ -1,5 +1,3 @@
-#!/usr/bin/env bash
-
 # general functions all shell programs can make use of
 
 ensure_installed() {
