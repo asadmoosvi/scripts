@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-source $(dirname "${BASH_SOURCE[0]}")/../include.sh
+source shell_include.sh
 
 ensure_installed fd fzf
 
