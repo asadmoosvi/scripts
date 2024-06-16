@@ -4,6 +4,7 @@ import argparse
 import logging
 import shutil
 import subprocess
+import sys
 
 logging.basicConfig(level=logging.INFO, format="[%(levelname)s] %(message)s")
 
@@ -23,7 +24,11 @@ def main() -> None:
     gh_search = subprocess.Popen(
         ["gh", "search", "repos", args.query], stdout=subprocess.PIPE
     )
-    fzf_output = subprocess.check_output(["fzf"], stdin=gh_search.stdout, text=True)
+    try:
+        fzf_output = subprocess.check_output(["fzf"], stdin=gh_search.stdout, text=True)
+    except subprocess.CalledProcessError:
+        logging.info("No repo selected!")
+        sys.exit(1)
     gh_search.wait()
     repo = fzf_output.split()[0]
 
