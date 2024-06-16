@@ -29,10 +29,11 @@ def main() -> None:
     except subprocess.CalledProcessError:
         logging.info("No repo selected!")
         sys.exit(1)
+
     gh_search.wait()
     repo = fzf_output.split()[0]
 
-    print(fzf_output)
+    print(f"https://github.com/{repo}")
     if args.clone:
         subprocess.run(["gh", "repo", "clone", repo])
 
