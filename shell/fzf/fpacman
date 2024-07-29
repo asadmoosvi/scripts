@@ -5,25 +5,26 @@ source shell_include.sh
 ensure_installed pacman fzf rg
 
 packages=$(
-  pacman -Sl |
-    rg -v '\[installed\]' |
-    fzf -m --header 'Select programs to install (ctrl-o to open url)' \
-      --preview 'pacman -Si {2}' \
-      --bind 'ctrl-o:execute-silent(pacman -Si {2} | rg URL | cut -d ":" -f2- | xargs xdg-open)' |
-    awk '{print $2}' |
-    tr '\n' ' '
+    pacman -Sl |
+        rg -v '\[installed\]' |
+        fzf -m --header 'Select programs to install (ctrl-o to open url)' \
+            --preview 'pacman -Si {2}' \
+            --bind 'ctrl-o:execute-silent(pacman -Si {2} | rg URL | cut -d ":" -f2- | xargs xdg-open)' |
+        awk '{print $2}' |
+        tr '\n' ' '
 )
 
 if [ "$packages" ]; then
-  echo "Packages selected: $packages"
-  read -r -p "Install? [y/n] " response
-  if ! [[ "$response" =~ ^([yY])$ ]]; then
-    echo "Aborting"
-    exit 1
-  else
-    echo "Running: sudo pacman -S --confirm $packages"
-    sudo pacman -S --confirm $packages
-  fi
+    install_cmd="sudo pacman -S --confirm"
+    echo "Packages selected: $packages"
+    read -r -p "Install? [Y/n] " response
+    if [[ "$response" =~ ^([yY])$ ]] || [[ -z "$response" ]]; then
+        echo "Running: $install_cmd $packages"
+        $install_cmd $packages
+    else
+        echo "Aborting"
+        exit 1
+    fi
 else
-  echo "No packages selected"
+    echo "No packages selected"
 fi
