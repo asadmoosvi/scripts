@@ -22,10 +22,11 @@
 
 ## :computer: Shell Scripts
 
-| Script            | Description                                                           | Requirements    |
-| ----------------- | --------------------------------------------------------------------- | --------------- |
-| shell/fzf/fwiki   | search for articles from the arch wiki in the cli                     | fd, fzf         |
-| shell/fzf/fpacman | search for uninstalled arch linux packages using fzf and install them | fd, fzf, pacman |
+| Script               | Description                                                           | Requirements      |
+| -------------------- | --------------------------------------------------------------------- | ----------------- |
+| shell/fzf/fwiki      | search for articles from the arch wiki in the cli                     | fd, fzf           |
+| shell/fzf/fpacman    | search for uninstalled arch linux packages using fzf and install them | fd, fzf, pacman   |
+| shell/update-mirrors | update pacman mirrorlist                                              | pacman, reflector |
 
 ## :snake: Python Instructions
 

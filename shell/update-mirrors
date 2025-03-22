@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+
+# check distro
+source /etc/os-release
+if [[ $ID != "arch" ]]; then
+    echo "This script only works on Arch Linux."
+    exit 1
+fi
+
+if [ ! -x "$(command -v reflector)" ]; then
+    echo "Installing reflector..."
+    sudo pacman -S reflector --noconfirm
+fi
+
+# backup previous mirrors
+echo "Backing up previous mirrorlist..."
+MIRRORS="/etc/pacman.d/mirrorlist"
+MIRRORS_BACKUP="$MIRRORS.bak"
+echo "$MIRRORS -> $MIRRORS_BACKUP"
+sudo cp $MIRRORS $MIRRORS_BACKUP
+
+sudo reflector --verbose -l 200 -n 20 -p https --sort rate --save $MIRRORS
