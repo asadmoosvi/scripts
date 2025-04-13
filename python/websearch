@@ -53,6 +53,13 @@ import click
     help="Search on chatgpt.",
 )
 @click.option(
+    "-x",
+    "--perplexity",
+    "website",
+    flag_value="perplexity",
+    help="Search on perplexity.ai (AI search engine)",
+)
+@click.option(
     "-i",
     "--incognito",
     is_flag=True,
@@ -93,6 +100,7 @@ def main(query: str, website: str, incognito: bool) -> None:
         duckduckgo="https://www.duckduckgo.com?q={}",
         piratebay="https://thepiratebay0.org/search/{}/1/99/0",
         chatgpt="https://chat.openai.com/chat?q={}",
+        perplexity="https://perplexity.ai/search?q={}",
     )
 
     if website is None:
