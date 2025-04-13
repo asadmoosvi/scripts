@@ -9,7 +9,7 @@ import click
 
 @click.command()
 @click.help_option("-h", "-?", "--help")
-@click.argument("query")
+@click.argument("query", nargs=-1, required=True)
 @click.option(
     "-y",
     "--youtube",
@@ -68,8 +68,7 @@ import click
 def main(query: str, website: str, incognito: bool) -> None:
     """Search for a query on a website and open the results in a browser.
 
-    The default website to search is Google.
-    QUERY is the search term to look for.
+    The default website to search is Google. Queries will be joined together into a single string.
     """
     chrome_path = shutil.which("google-chrome") or shutil.which("google-chrome-stable")
     firefox_path = shutil.which("firefox")
@@ -107,9 +106,10 @@ def main(query: str, website: str, incognito: bool) -> None:
         # default website to search is google
         website = "google"
 
+    query = " ".join(query)
     url = websites[website].format(query)
     click.echo(f"==> Searching for {query!r} on {website!r}")
-    click.echo(f'==> Incognito mode is {"on" if incognito else "off"}.')
+    click.echo(f"==> Incognito mode is {'on' if incognito else 'off'}.")
 
     cmd = shlex.split(browser_path) + [url]
     subprocess.Popen(cmd, stderr=subprocess.DEVNULL, stdout=subprocess.DEVNULL)
