@@ -109,7 +109,17 @@ def main(query: str, website: str, incognito: bool) -> None:
         # default website to search is google
         website = "google"
 
+    add_newline = False
     if not query:
+        # confirm before opening a text editor
+        click.confirm(
+            "Open default text editor to input query?",
+            prompt_suffix=" ",
+            default=True,
+            abort=True,
+            err=True,
+        )
+
         edited_text = click.edit()
         if not edited_text:
             click.secho(
@@ -119,6 +129,7 @@ def main(query: str, website: str, incognito: bool) -> None:
             )
             sys.exit(1)
         readable_query = edited_text.strip()
+        add_newline = True
 
     else:
         readable_query = " ".join(q for q in query)
@@ -126,7 +137,7 @@ def main(query: str, website: str, incognito: bool) -> None:
     query = quote(readable_query)
 
     url = websites[website].format(query)
-    click.echo(f"Query\n-----\n{readable_query}")
+    click.echo(f"{'\n' if add_newline else ''}Query\n-----\n{readable_query}")
     click.echo(f"\n==> Website: {website!r}")
     click.echo(f"==> Incognito mode: {'on' if incognito else 'off'}")
 
