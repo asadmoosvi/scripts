@@ -101,7 +101,7 @@ def main(query: str, website: str, incognito: bool) -> None:
         github="https://www.github.com/search?q={}",
         duckduckgo="https://www.duckduckgo.com?q={}",
         piratebay="https://thepiratebay0.org/search/{}/1/99/0",
-        chatgpt="https://chatgpt.com/search?q={}",
+        chatgpt="https://chatgpt.com/?q={}",
         perplexity="https://perplexity.ai/search?q={}",
     )
 
