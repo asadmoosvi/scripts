@@ -14,7 +14,6 @@
 | python/wttr            | helper script to get weather info from wttr.in                                            | python          |
 | python/websearch       | search for something on a particular website and open in the browser                      | python          |
 | python/fake-ua         | get a fake user agent                                                                     | python          |
-| python/get-ghdir       | download a specific directory from a repo on github                                       | python          |
 | python/git-ssh-remotes | rename all git remote http origins recursively under current directory to use ssh instead | python          |
 | python/mfp             | play music from https://musicforprogramming.net                                           | python          |
 | python/download-mfp    | downloads all tracks from https://musicforprogramming.net                                 | python, wget    |
